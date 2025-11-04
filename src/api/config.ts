@@ -19,6 +19,12 @@ export const SOCIAL_BASE = `${API_BASE}/social`;
 export const AUTH_BASE = `${API_BASE}/auth`;
 
 /**
+ *  A single app-wide API key for all requests.
+ * (Generated via POST /auth/create-api-key)
+ */
+export const NOROFF_API_KEY = "0347c2af-b301-42c6-b0d8-f75e639e2382";
+
+/**
  * Returns default headers for JSON requests.
  * Used for requests that don't require the user to be logged in.
  */

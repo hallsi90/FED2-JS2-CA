@@ -3,23 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./src/styles/global.css" />
+    <link rel="stylesheet" href="/src/styles/global.css" />
     <title>Feed</title>
   </head>
   <body>
-    <!-- feed page (all posts / home) -->
-
     <header>
       <nav>
-        <!-- temporary basic nav -->
-        <a href="./index.html">Feed</a>
-        <a href="./profile/index.html">My Profile</a>
-        <a href="./login/index.html">Login</a>
+        <a href="/">Feed</a>
+        <a href="/profile/">My Profile</a>
+        <a href="/login/">Login</a>
       </nav>
     </header>
 
     <main id="page-root">
-      <!-- This will be filled by JS -->
+      <h1>All Posts</h1>
+      <!-- Loading / errors will be shown here -->
+      <p id="feed-status" aria-live="polite"></p>
+
+      <!-- Posts will be rendered here -->
+      <section id="feed-root"></section>
     </main>
 
     <script type="module" src="/src/pages/feed.ts"></script>
