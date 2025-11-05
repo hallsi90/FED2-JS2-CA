@@ -1,8 +1,18 @@
 /**
  * Global styles
+*/
 
- The styles that are here are from the vite setup!
- */
+/* Hide "Search Posts" text before search bar */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* The styles that are here are from the vite setup! */
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

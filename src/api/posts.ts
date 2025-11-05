@@ -66,3 +66,30 @@ export async function getPostById(id: number) {
   }
   return data.data;
 }
+
+/**
+ * Search for posts by title, body/content or author name
+ */
+export async function searchPosts(query: string) {
+  const token = getToken();
+  if (!token) {
+    throw new Error("You must be logged in to search posts.");
+  }
+
+  const url = `${SOCIAL_BASE}/posts/search?q=${encodeURIComponent(query)}`;
+
+  const response = await fetch(url, {
+    headers: {
+      ...getAuthHeaders(token),
+      "X-Noroff-API-Key": NOROFF_API_KEY,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const message = data?.errors?.[0]?.message || "Could not search posts.";
+    throw new Error(message);
+  }
+  return data.data;
+}
