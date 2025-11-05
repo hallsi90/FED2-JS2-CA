@@ -18,8 +18,9 @@ async function loadPost() {
   const idParam = params.get("id");
 
   if (!idParam) {
-    status.textContent = "No post id provided";
+    status.textContent = "No post id provided.";
     status.className = "error";
+    return; // stop here
   }
 
   const id = Number(idParam);

@@ -68,7 +68,7 @@ export async function getPostById(id: number) {
 }
 
 /**
- * Search for posts by title, body/content or author name
+ * Search for posts by title or body/content
  */
 export async function searchPosts(query: string) {
   const token = getToken();

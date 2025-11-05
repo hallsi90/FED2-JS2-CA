@@ -24,8 +24,8 @@ export interface FullPost {
     created: string;
   }>;
   _count?: {
-    comments: number;
-    reactions: number;
+    comments?: number;
+    reactions?: number;
   };
 }
 
@@ -76,14 +76,14 @@ function renderReactions(reactions: FullPost["reactions"]): string {
     <h2>Reactions</h2>
      <ul>
       ${items}
-     </ul>>
+     </ul>
     </section>
    `;
 }
 
 function renderComments(comments: FullPost["comments"]): string {
   if (!comments || comments.length === 0) {
-    return `<section class="post-comments><p>No comments yet.</p></section>`;
+    return `<section class="post-comments"><p>No comments yet.</p></section>`;
   }
 
   const items = comments
