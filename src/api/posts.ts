@@ -131,3 +131,40 @@ export async function createPost(payload: {
   // API returns the created post
   return data.data;
 }
+
+/**
+ * Edit an existing post
+ */
+export async function updatePost(
+  id: number,
+  payload: {
+    title: string;
+    body?: string;
+    media?: { url: string; alt?: string };
+    tags?: string[];
+  }
+) {
+  const token = getToken();
+  if (!token) {
+    throw new Error("You must be logged in to edit a post.");
+  }
+
+  const response = await fetch(`${SOCIAL_BASE}/posts/${id}`, {
+    method: "PUT",
+    headers: {
+      ...getAuthHeaders(token),
+      "X-Noroff-API-Key": NOROFF_API_KEY,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const message =
+      data?.errors?.[0]?.message || "Could not update post. Please try again.";
+    throw new Error(message);
+  }
+
+  return data.data; // updated post
+}
