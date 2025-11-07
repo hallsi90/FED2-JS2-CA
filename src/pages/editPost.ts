@@ -3,7 +3,7 @@
 // load a post by id, prefill the form, allow editing and saving changes or deleting the post
 
 import { requireAuth } from "../utils/authGuard";
-import { getPostById, updatePost } from "../api/posts";
+import { getPostById, updatePost, deletePost } from "../api/posts";
 import { getProfileName } from "../api/storage";
 
 requireAuth(); // only logged in users can access this page
@@ -121,4 +121,37 @@ function showStatus(
   if (!statusEl) return;
   statusEl.textContent = text;
   statusEl.className = type;
+}
+
+/**
+ * Delete post button
+ */
+const deleteBtn = document.querySelector<HTMLButtonElement>("#delete-post-btn");
+
+if (deleteBtn) {
+  deleteBtn.addEventListener("click", async () => {
+    if (!idParam) {
+      showStatus("Missing post ID.", "error");
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this post? This action cannot be undone."
+    );
+    if (!confirmed) return;
+
+    try {
+      showStatus("Deleting post...", "info");
+      await deletePost(Number(idParam));
+      showStatus("Post deleted. Redirecting to feed...", "success");
+      // go to feed
+      window.location.href = "/";
+    } catch (error) {
+      if (error instanceof Error) {
+        showStatus(error.message, "error");
+      } else {
+        showStatus("Could not delete post.", "error");
+      }
+    }
+  });
 }

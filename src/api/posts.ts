@@ -168,3 +168,34 @@ export async function updatePost(
 
   return data.data; // updated post
 }
+
+/**
+ * Delete a post
+ */
+export async function deletePost(id: number) {
+  const token = getToken();
+  if (!token) {
+    throw new Error("You must be logged in to delete a post.");
+  }
+
+  const response = await fetch(`${SOCIAL_BASE}/posts/${id}`, {
+    method: "DELETE",
+    headers: {
+      ...getAuthHeaders(token),
+      "X-Noroff-API-Key": NOROFF_API_KEY,
+    },
+  });
+
+  // DELETE returns 204 No Content on success
+  if (!response.ok) {
+    // try to read error body if it exists
+    let message = "Could not delete post.";
+    try {
+      const data = await response.json();
+      message = data?.errors?.[0]?.message || message;
+    } catch {
+      // ignore JSON parse errors, keep default message
+    }
+    throw new Error(message);
+  }
+}
