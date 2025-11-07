@@ -24,10 +24,16 @@ export interface Post {
 export function renderPostCard(post: Post): string {
   // fallback values
   const title = post.title || "Untitled post";
-  const author = post.author?.name || "Unknown author";
+  const authorName = post.author?.name;
 
   // link to the single post page with ?id=POST_ID
   const postLink = `/post/?id=${post.id}`;
+
+  const authorHtml = authorName
+    ? `<a href="/profile/?name=${encodeURIComponent(
+        authorName
+      )}">${authorName}</a>`
+    : "Unknown author";
 
   // only show an image if media.url exists
   const imageHtml = post.media?.url
@@ -40,7 +46,7 @@ export function renderPostCard(post: Post): string {
     <article class="post-card">
     ${imageHtml}
     <h2><a href="${postLink}">${title}</a></h2>
-    <p class="post-meta">by ${author}</p>
+    <p class="post-meta">by ${authorHtml}</p>
     ${
       post.body
         ? `<p class="post-body">${post.body.substring(0, 120)}...</p>`

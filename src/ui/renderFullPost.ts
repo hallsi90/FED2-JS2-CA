@@ -34,7 +34,13 @@ export interface FullPost {
  */
 export function renderFullPost(post: FullPost): string {
   const title = post.title || "Untitled post";
-  const author = post.author?.name || "Unknown author";
+  const authorName = post.author?.name;
+
+  const authorHtml = authorName
+    ? `<a href="/profile/?name=${encodeURIComponent(
+        authorName
+      )}">${authorName}</a>`
+    : "Unknown author";
 
   const imageHtml = post.media?.url
     ? `<img src="${post.media.url}" alt="${
@@ -51,7 +57,7 @@ export function renderFullPost(post: FullPost): string {
     <article class="single-post">
     ${imageHtml}
     <h1>${title}</h1>
-    <p class="post-meta">by ${author}</p>
+    <p class="post-meta">by ${authorHtml}</p>
     ${bodyHtml}
     ${reactionsHtml}
     ${commentsHtml}
