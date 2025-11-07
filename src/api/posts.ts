@@ -93,3 +93,41 @@ export async function searchPosts(query: string) {
   }
   return data.data;
 }
+
+/**
+ * Create a new post
+ */
+export async function createPost(payload: {
+  title: string;
+  body?: string;
+  media?: {
+    url: string;
+    alt?: string;
+  };
+  tags?: string[];
+}) {
+  const token = getToken();
+  if (!token) {
+    throw new Error("You must be logged in to create a post.");
+  }
+
+  const response = await fetch(`${SOCIAL_BASE}/posts`, {
+    method: "POST",
+    headers: {
+      ...getAuthHeaders(token),
+      "X-Noroff-API-Key": NOROFF_API_KEY,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const message =
+      data?.errors?.[0]?.message || "Could not create post. Please try again.";
+    throw new Error(message);
+  }
+
+  // API returns the created post
+  return data.data;
+}

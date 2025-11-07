@@ -1,27 +1,42 @@
-<!-- create post form (requires login) -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./src/styles/global.css" />
-    <title>Create</title>
+    <link rel="stylesheet" href="/src/styles/global.css" />
+    <title>Create Post</title>
   </head>
   <body>
-    <!-- feed page (all posts / home) -->
-
     <header>
       <nav>
-        <!-- temporary basic nav -->
-        <a href="./index.html">Feed</a>
-        <a href="./profile/index.html">My Profile</a>
-        <a href="./login/index.html">Login</a>
+        <a href="/">Feed</a>
+        <a href="/profile/">My Profile</a>
+        <a href="/login/">Login</a>
       </nav>
     </header>
 
     <main id="page-root">
-      <!-- This will be filled by JS -->
+      <h1>Create a new post</h1>
+
+      <form id="createPostForm">
+        <label for="title">Title</label>
+        <input id="title" name="title" type="text" required />
+
+        <label for="body">Content</label>
+        <textarea id="body" name="body" rows="4"></textarea>
+
+        <label for="mediaUrl">Image URL</label>
+        <input
+          id="mediaUrl"
+          name="mediaUrl"
+          type="url"
+          placeholder="https://..."
+        />
+
+        <button type="submit">Create Post</button>
+      </form>
+
+      <p id="create-message" aria-live="polite"></p>
     </main>
 
     <script type="module" src="/src/pages/createPost.ts"></script>
