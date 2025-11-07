@@ -19,21 +19,29 @@ loadProfile();
 async function loadProfile() {
   if (!statusEl || !profileRoot || !postsRoot) return;
 
-  // get the logged-in user's name from storage
+  // 1) Check URL for ?name=someone
+  const params = new URLSearchParams(window.location.search);
+  const requestedName = params.get("name");
+
+  // 2) If no ?name=, use logged-in user's name
   const myName = getProfileName();
 
   if (!myName) {
-    // no name in storage = not logged in properly -> redirect to login
+    // somehow no name in storage = not logged in properly -> redirect to login
     window.location.href = "/login/";
     return;
   }
 
-  showStatus("Loading profile...", "info");
+  // this is the profile to load
+  const profileToLoad = requestedName || myName;
+
+  // tell the user whose profile is being loaded
+  showStatus(`Loading profile: ${profileToLoad}...`, "info");
 
   try {
-    const profile = await getProfile(myName);
+    const profile = await getProfile(profileToLoad);
 
-    // render top section
+    // render header (avatar, name, counts)
     profileRoot.innerHTML = renderProfileHeader(profile);
 
     // render posts
@@ -43,7 +51,11 @@ async function loadProfile() {
       const html = posts.map((post) => renderPostCard(post)).join("");
       postsRoot.innerHTML = html;
     } else {
-      postsRoot.innerHTML = "<p>This user has no posts yet.</p>";
+      // message depending on whose profile it is
+      const isOtherUser = Boolean(requestedName && requestedName !== myName);
+      postsRoot.innerHTML = isOtherUser
+        ? "<p>This user has no posts yet.</p>"
+        : "<p>You have no posts yet.</p>";
     }
 
     showStatus("");
