@@ -1,27 +1,27 @@
-<!-- profile page (your profile or other user's ?name=someone) -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./src/styles/global.css" />
+    <link rel="stylesheet" href="/src/styles/global.css" />
     <title>Profile</title>
   </head>
   <body>
-    <!-- feed page (all posts / home) -->
-
     <header>
       <nav>
-        <!-- temporary basic nav -->
-        <a href="./index.html">Feed</a>
-        <a href="./profile/index.html">My Profile</a>
-        <a href="./login/index.html">Login</a>
+        <a href="/">Feed</a>
+        <a href="/profile/">My Profile</a>
+        <a href="/login/">Login</a>
       </nav>
     </header>
 
     <main id="page-root">
-      <!-- This will be filled by JS -->
+      <p id="profile-status" aria-live="polite"></p>
+
+      <!-- profile header -->
+      <section id="profile-root"></section>
+      <h2>My posts</h2>
+      <section id="profile-posts"></section>
     </main>
 
     <script type="module" src="/src/pages/profile.ts"></script>
