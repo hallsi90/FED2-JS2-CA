@@ -12,6 +12,11 @@
   white-space: nowrap;
 }
 
+/* Hide Create Post link when not logged in */
+.hidden {
+  display: none !important;
+}
+
 .profile-list-header {
   display: flex;
   align-items: center;
