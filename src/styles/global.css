@@ -2,6 +2,7 @@
  * Global styles
 */
 
+/****************** SOME TEMPORARY STYLING ************************/
 /* Hide "Search Posts" text before search bar */
 .visually-hidden {
   position: absolute;
@@ -17,12 +18,14 @@
   display: none !important;
 }
 
+/* Following/followers list */
 .profile-list-header {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
+/* Back to posts from following/followers lists */
 #back-to-posts-btn {
   background: none;
   border: none;
@@ -33,6 +36,14 @@
 
 #back-to-posts-btn:hover {
   text-decoration: underline;
+}
+
+/* Edit post link to edit form */
+.edit-post-link {
+  display: inline-block;
+  margin-top: 1rem;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 /* The styles that are here are from the vite setup! */
