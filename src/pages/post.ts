@@ -1,7 +1,7 @@
 // src/pages/post.ts
 // loads a single post by ID
 
-import { getPostById } from "../api/posts";
+import { getPostById, deletePost } from "../api/posts";
 import { renderFullPost } from "../ui/renderFullPost";
 import { setupAuthButtons } from "../utils/common";
 import { getProfileName } from "../api/storage";
@@ -45,13 +45,46 @@ async function loadPost() {
     const postAuthor = post.author?.name;
 
     if (currentUser && postAuthor && currentUser === postAuthor) {
+      // EDIT link
       const editPostLink = document.createElement("a");
       editPostLink.href = `/post/edit.html?id=${post.id}`;
       editPostLink.textContent = "Edit Post";
       editPostLink.className = "edit-post-link";
-
       // stick it at the bottom of the post
       root.appendChild(editPostLink);
+
+      // DELETE button
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Delete Post";
+      deleteBtn.className = "delete-post-button";
+      deleteBtn.type = "button";
+
+      deleteBtn.addEventListener("click", async () => {
+        const confirmed = window.confirm(
+          "Are you sure you want to delete this post? This cannot be undone."
+        );
+        if (!confirmed) return;
+
+        try {
+          showStatus("Deleting post...", "info");
+          await deletePost(post.id);
+          // redirect to my profile
+          const me = getProfileName();
+          if (me) {
+            window.location.href = `/profile/?name=${encodeURIComponent(me)}`;
+          } else {
+            window.location.href = "/";
+          }
+        } catch (error) {
+          if (error instanceof Error) {
+            showStatus(error.message, "error");
+          } else {
+            showStatus("Could not delete post.", "error");
+          }
+        }
+      });
+
+      root.appendChild(deleteBtn);
     }
   } catch (error) {
     if (error instanceof Error) {

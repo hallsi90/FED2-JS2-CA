@@ -39,7 +39,8 @@
 }
 
 /* Edit post link to edit form */
-.edit-post-link {
+.edit-post-link,
+.delete-post-button {
   display: inline-block;
   margin-top: 1rem;
   text-decoration: underline;

@@ -145,9 +145,13 @@ if (deleteBtn) {
     try {
       showStatus("Deleting post...", "info");
       await deletePost(Number(idParam));
-      showStatus("Post deleted. Redirecting to feed...", "success");
-      // go to feed
-      window.location.href = "/";
+
+      const me = getProfileName();
+      if (me) {
+        window.location.href = `/profile/?name=${encodeURIComponent(me)}`;
+      } else {
+        window.location.href = "/";
+      }
     } catch (error) {
       if (error instanceof Error) {
         showStatus(error.message, "error");
