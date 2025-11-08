@@ -1,6 +1,6 @@
 // src/pages/profile.ts
 // load profile data + follow/unfollow
-// show the logged-in user's profile and their posts
+// show users profiles and their posts
 
 import { requireAuth } from "../utils/authGuard";
 import { getProfile, followProfile, unfollowProfile } from "../api/profiles";
@@ -44,10 +44,19 @@ async function loadProfile() {
   try {
     const profile = await getProfile(profileToLoad);
 
+    // make sure posts always have author info
+    const rawPosts = (profile as any).posts as any[] | undefined;
+    const postsWithAuthor = rawPosts
+      ? rawPosts.map((post) => ({
+          ...post,
+          author: post.author ?? { name: profile.name },
+        }))
+      : [];
+
     // 1) Render header (avatar, name, counts)
     profileRoot.innerHTML = renderProfileHeader(profile);
 
-    // 2) If this is NOT my profile -> show follow/unfollow button
+    // 2) show follow/unfollow button if not my profile
     if (!isMyProfile) {
       const btn = document.createElement("button");
       btn.id = "follow-toggle-btn";
@@ -80,6 +89,15 @@ async function loadProfile() {
 
           // 2) fetch the full updated profile to get new counts
           const updatedProfile = await getProfile(profileToLoad);
+          const updatedRawPosts = (updatedProfile as any).posts as
+            | any[]
+            | undefined;
+          const updatedPostsWithAuthor = updatedRawPosts
+            ? updatedRawPosts.map((post) => ({
+                ...post,
+                author: post.author ?? { name: updatedProfile.name },
+              }))
+            : [];
 
           // 3) re-render header with updated counts
           profileRoot.innerHTML = renderProfileHeader(updatedProfile);
@@ -95,6 +113,9 @@ async function loadProfile() {
             );
 
           btn.textContent = nowFollowing ? "Unfollow" : "Follow";
+
+          // also restore posts view with the updated ones
+          renderPostsView(updatedPostsWithAuthor, requestedName, myName);
 
           showStatus(
             nowFollowing
@@ -116,7 +137,7 @@ async function loadProfile() {
       profileRoot.appendChild(btn);
     }
 
-    // 3) listen for clicks on followers/following buttons to show lists
+    // 3) followers/following lists toggle
     profileRoot.addEventListener("click", (event) => {
       const target = event.target as HTMLElement;
       if (!target.matches(".profile-count-btn")) return;
@@ -132,11 +153,10 @@ async function loadProfile() {
           }>
         | undefined;
 
-      const container = document.querySelector<HTMLElement>("#profile-posts");
-      if (!container) return;
+      if (!postsRoot) return;
 
       if (!people || people.length === 0) {
-        container.innerHTML =
+        postsRoot.innerHTML =
           listType === "followers"
             ? "<p>No followers yet.</p>"
             : "<p>Not following anyone yet.</p>";
@@ -165,7 +185,7 @@ async function loadProfile() {
       // reuse the posts area to show the list
       const heading = listType.charAt(0).toUpperCase() + listType.slice(1); // capitalize Followers/Following list heading
 
-      container.innerHTML = `
+      postsRoot.innerHTML = `
       <div class="profile-list-header">
       <button id="back-to-posts-btn" type="button">&larr; Back to posts</button>
       <h2>${heading}</h2>
@@ -178,13 +198,13 @@ async function loadProfile() {
       if (backBtn) {
         backBtn.addEventListener("click", () => {
           // re-render the original posts list
-          renderPostsView(profile, requestedName, myName);
+          renderPostsView(postsWithAuthor, requestedName, myName);
         });
       }
     });
 
     // 4) initial post render
-    renderPostsView(profile, requestedName, myName);
+    renderPostsView(postsWithAuthor, requestedName, myName);
 
     showStatus("");
   } catch (error) {
@@ -197,13 +217,11 @@ async function loadProfile() {
 }
 
 function renderPostsView(
-  profile: any,
+  posts: any[],
   requestedName: string | null,
   myName: string
 ) {
   if (!postsRoot) return;
-
-  const posts = profile.posts as any[] | undefined;
 
   if (posts && posts.length > 0) {
     const html = posts.map((post) => renderPostCard(post)).join("");
@@ -212,7 +230,7 @@ function renderPostsView(
     // no posts
     const isOtherUser = Boolean(requestedName && requestedName !== myName);
     postsRoot.innerHTML = isOtherUser
-      ? `<p>${profile.name} has no posts yet.</p>`
+      ? `<p>This user has no posts yet.</p>`
       : "<p>You have no posts yet.</p>";
   }
 }
