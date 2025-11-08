@@ -12,6 +12,24 @@
   white-space: nowrap;
 }
 
+.profile-list-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#back-to-posts-btn {
+  background: none;
+  border: none;
+  color: var(--primary-color, #2a6f97);
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+#back-to-posts-btn:hover {
+  text-decoration: underline;
+}
+
 /* The styles that are here are from the vite setup! */
 
 :root {

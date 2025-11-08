@@ -2,6 +2,9 @@
 // handles register form submission
 
 import { registerUser } from "../api/auth";
+import { setupAuthButtons } from "../utils/common";
+
+setupAuthButtons();
 
 // Grab the form and the place where we show messages
 const form = document.querySelector<HTMLFormElement>("#registerForm");

@@ -3,11 +3,13 @@
 
 import { getPostById } from "../api/posts";
 import { renderFullPost } from "../ui/renderFullPost";
+import { setupAuthButtons } from "../utils/common";
 
 const root = document.querySelector<HTMLElement>("#post-root");
 const status = document.querySelector<HTMLElement>("#post-status");
 
 // run on load
+setupAuthButtons();
 loadPost();
 
 async function loadPost() {

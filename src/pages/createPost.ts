@@ -3,7 +3,9 @@
 
 import { requireAuth } from "../utils/authGuard";
 import { createPost } from "../api/posts";
+import { setupAuthButtons } from "../utils/common";
 
+setupAuthButtons();
 requireAuth(); // make sure only logged-in users can access this page
 
 const form = document.querySelector<HTMLFormElement>("#createPostForm");

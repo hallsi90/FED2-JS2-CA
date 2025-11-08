@@ -5,7 +5,9 @@
 import { requireAuth } from "../utils/authGuard";
 import { getPostById, updatePost, deletePost } from "../api/posts";
 import { getProfileName } from "../api/storage";
+import { setupAuthButtons } from "../utils/common";
 
+setupAuthButtons();
 requireAuth(); // only logged in users can access this page
 
 const form = document.querySelector<HTMLFormElement>("#editPostForm");

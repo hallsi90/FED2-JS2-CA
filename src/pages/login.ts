@@ -2,6 +2,9 @@
 // handles login form submission
 
 import { loginUser } from "../api/auth";
+import { setupAuthButtons } from "../utils/common";
+
+setupAuthButtons();
 
 // Grab the form and the place where we show messages
 const form = document.querySelector<HTMLFormElement>("#loginForm");

@@ -8,6 +8,7 @@ import {
   renderProfileResult,
   type ProfileResult,
 } from "../ui/renderProfileResults";
+import { setupAuthButtons } from "../utils/common";
 
 // container where all posts will be inserted
 const feedRoot = document.querySelector<HTMLElement>("#feed-root");
@@ -20,6 +21,7 @@ const feedSearch = document.querySelector<HTMLInputElement>("#feed-search");
 let allPosts: Post[] = [];
 
 // run immediately
+setupAuthButtons();
 loadPosts();
 
 async function loadPosts() {

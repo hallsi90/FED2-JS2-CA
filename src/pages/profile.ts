@@ -7,7 +7,9 @@ import { getProfile, followProfile, unfollowProfile } from "../api/profiles";
 import { getProfileName } from "../api/storage";
 import { renderProfileHeader } from "../ui/renderProfile";
 import { renderPostCard } from "../ui/renderPostCard";
+import { setupAuthButtons } from "../utils/common";
 
+setupAuthButtons();
 requireAuth(); // only logged in users can access this page
 
 const statusEl = document.querySelector<HTMLElement>("#profile-status");
