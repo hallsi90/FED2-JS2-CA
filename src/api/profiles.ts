@@ -97,3 +97,65 @@ export async function searchProfiles(query: string) {
 
   return data.data; // return array of profiles
 }
+
+/**
+ * Follow a profile
+ * PUT /social/profiles/{name}/follow
+ */
+export async function followProfile(name: string) {
+  const token = getToken();
+  if (!token) {
+    throw new Error("You must be logged in to follow a profile.");
+  }
+
+  const url = `${SOCIAL_BASE}/profiles/${encodeURIComponent(name)}/follow`;
+
+  const response = await fetch(url, {
+    method: "PUT",
+    headers: {
+      ...getAuthHeaders(token),
+      "X-Noroff-API-Key": NOROFF_API_KEY,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const message =
+      data?.errors?.[0]?.message || "Could not follow this profile.";
+    throw new Error(message);
+  }
+
+  return data.data; // return updated profile object
+}
+
+/**
+ * Unfollow a profile
+ * PUT /social/profiles/{name}/unfollow
+ */
+export async function unfollowProfile(name: string) {
+  const token = getToken();
+  if (!token) {
+    throw new Error("You must be logged in to unfollow a profile.");
+  }
+
+  const url = `${SOCIAL_BASE}/profiles/${encodeURIComponent(name)}/unfollow`;
+
+  const response = await fetch(url, {
+    method: "PUT",
+    headers: {
+      ...getAuthHeaders(token),
+      "X-Noroff-API-Key": NOROFF_API_KEY,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const message =
+      data?.errors?.[0]?.message || "Could not unfollow this profile.";
+    throw new Error(message);
+  }
+
+  return data.data; // return updated profile object
+}
