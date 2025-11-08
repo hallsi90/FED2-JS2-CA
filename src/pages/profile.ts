@@ -110,22 +110,79 @@ async function loadProfile() {
           setBusy(false);
         }
       });
+
       profileRoot.appendChild(btn);
     }
 
-    // 3) Render posts
-    const posts = (profile as any).posts as any[] | undefined;
+    // 3) listen for clicks on followers/following buttons to show lists
+    profileRoot.addEventListener("click", (event) => {
+      const target = event.target as HTMLElement;
+      if (!target.matches(".profile-count-btn")) return;
 
-    if (posts && posts.length > 0) {
-      const html = posts.map((post) => renderPostCard(post)).join("");
-      postsRoot.innerHTML = html;
-    } else {
-      // message depending on whose profile it is
-      const isOtherUser = Boolean(requestedName && requestedName !== myName);
-      postsRoot.innerHTML = isOtherUser
-        ? "<p>This user has no posts yet.</p>"
-        : "<p>You have no posts yet.</p>";
-    }
+      const listType = target.dataset.list; // "followers" or "following"
+      if (!listType) return;
+
+      const people = (profile as any)[listType] as
+        | Array<{
+            name: string;
+            avatar?: { url: string; alt?: string };
+            bio?: string;
+          }>
+        | undefined;
+
+      const container = document.querySelector<HTMLElement>("#profile-posts");
+      if (!container) return;
+
+      if (!people || people.length === 0) {
+        container.innerHTML =
+          listType === "followers"
+            ? "<p>No followers yet.</p>"
+            : "<p>Not following anyone yet.</p>";
+        return;
+      }
+
+      const peopleHtml = people
+        .map((person) => {
+          const avatarHtml = person.avatar?.url
+            ? `<img src="${person.avatar.url}" alt="${
+                person.avatar.alt || person.name
+              }" class="profile-avatar-small" />`
+            : "";
+          return `
+          <article class="profile-result">
+          ${avatarHtml}
+          <h3><a href="/profile/?name=${encodeURIComponent(person.name)}">${
+            person.name
+          }</a></h3>
+          ${person.bio ? `<p>${person.bio}</p>` : ""}
+          </article>
+        `;
+        })
+        .join("");
+
+      // reuse the posts area to show the list
+      const heading = listType.charAt(0).toUpperCase() + listType.slice(1); // capitalize Followers/Following list heading
+
+      container.innerHTML = `
+      <div class="profile-list-header">
+      <button id="back-to-posts-btn" type="button">&larr; Back to posts</button>
+      <h2>${heading}</h2>
+     </div>
+      ${peopleHtml}
+      `;
+
+      // handle back to posts button
+      const backBtn = document.querySelector<HTMLElement>("#back-to-posts-btn");
+      if (backBtn) {
+        backBtn.addEventListener("click", () => {
+          // re-render the original posts list
+          renderPostsView(profile, requestedName, myName);
+        });
+      }
+    });
+
+    // 4) initial post render
+    renderPostsView(profile, requestedName, myName);
 
     showStatus("");
   } catch (error) {
@@ -134,6 +191,27 @@ async function loadProfile() {
     } else {
       showStatus("Could not load profile.", "error");
     }
+  }
+}
+
+function renderPostsView(
+  profile: any,
+  requestedName: string | null,
+  myName: string
+) {
+  if (!postsRoot) return;
+
+  const posts = profile.posts as any[] | undefined;
+
+  if (posts && posts.length > 0) {
+    const html = posts.map((post) => renderPostCard(post)).join("");
+    postsRoot.innerHTML = html;
+  } else {
+    // no posts
+    const isOtherUser = Boolean(requestedName && requestedName !== myName);
+    postsRoot.innerHTML = isOtherUser
+      ? `<p>${profile.name} has no posts yet.</p>`
+      : "<p>You have no posts yet.</p>";
   }
 }
 

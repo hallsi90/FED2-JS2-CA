@@ -38,8 +38,15 @@ export function renderProfileHeader(profile: Profile): string {
    ${profile.bio ? `<p>${profile.bio}</p>` : ""}
    <ul class="profile-counts">
      <li>Posts: ${profile._count?.posts ?? 0}</li>
-     <li>Followers: ${profile._count?.followers ?? 0}</li>
-     <li>Following: ${profile._count?.following ?? 0}</li>
+     <li>
+     <button type="button" class="profile-count-btn" data-list="followers">
+     Followers: ${profile._count?.followers ?? 0}</li>
+     </button>
+     <li>
+       <button type="button" class="profile-count-btn" data-list="following">
+         Following: ${profile._count?.following ?? 0}
+       </button>
+     </li>
    </ul>
   </header>
 `;
