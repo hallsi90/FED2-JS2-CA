@@ -47,6 +47,12 @@
   cursor: pointer;
 }
 
+/* Profile header if profiles are found in normal search (without @)*/
+.search-section-title {
+  margin-top: 1.5rem;
+  font-weight: 600;
+}
+
 /* The styles that are here are from the vite setup! */
 
 :root {

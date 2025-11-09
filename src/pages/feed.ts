@@ -47,14 +47,14 @@ if (feedSearch) {
   feedSearch.addEventListener("input", async (event) => {
     const value = (event.target as HTMLInputElement).value.trim();
 
-    // 1) empty search -> show all posts
+    // empty search -> show all posts
     if (value === "") {
       renderPosts(allPosts);
       showStatus("");
       return;
     }
 
-    // 2) if user types @name -> search profiles directly
+    // if user types @name -> search profiles directly
     if (value.startsWith("@")) {
       const name = value.slice(1); // remove @
       if (name === "") {
@@ -65,18 +65,57 @@ if (feedSearch) {
       return;
     }
 
-    // 3) otherwise -> search posts first
-    showStatus("Searching posts...", "info");
-    try {
-      const results = await searchPosts(value);
+    showStatus("Searching posts and profiles...", "info");
 
-      if (!results.length) {
-        // no posts found? ok, try searching profiles
-        showStatus("No posts found. Searching profiles...", "info");
-        await handleProfileSearch(value);
+    try {
+      // 1) API search posts (title/body) with _author=true
+      const remoteResults: Post[] = await searchPosts(value);
+
+      // 2) local author-name search on the feed posts (not possible via API)
+      const valueLower = value.toLowerCase();
+      const localAuthorMatches: Post[] = allPosts.filter((post) =>
+        post.author?.name?.toLowerCase().includes(valueLower)
+      );
+
+      // 3) merge local + remote results, avoiding duplicates
+      const mergedById = new Map<number, Post>();
+      for (const p of localAuthorMatches) {
+        mergedById.set(p.id, p);
+      }
+      for (const p of remoteResults) {
+        mergedById.set(p.id, p);
+      }
+      const combinedPosts = Array.from(mergedById.values());
+
+      // 4) search for profiles too
+      const profiles: ProfileResult[] = await searchProfiles(value);
+
+      // render results
+      let html = "";
+
+      if (combinedPosts.length > 0) {
+        html += combinedPosts.map((post) => renderPostCard(post)).join("");
+      }
+
+      if (profiles.length > 0) {
+        const profilesHtml = profiles
+          .map((profile: ProfileResult) => renderProfileResult(profile))
+          .join("");
+
+        // add small heading if both are shown
+        if (combinedPosts.length > 0) {
+          html += `<h2 class="search-section-title">Profiles</h2>`;
+        }
+
+        html += profilesHtml;
+      }
+
+      if (html === "") {
+        showStatus("No posts or profiles found.", "info");
+        renderHtml("");
       } else {
-        renderPosts(results);
-        showStatus(""); // clear message
+        renderHtml(html);
+        showStatus("");
       }
     } catch (error) {
       showStatus("Search failed. Please try again.", "error");

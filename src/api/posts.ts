@@ -76,7 +76,9 @@ export async function searchPosts(query: string) {
     throw new Error("You must be logged in to search posts.");
   }
 
-  const url = `${SOCIAL_BASE}/posts/search?q=${encodeURIComponent(query)}`;
+  const url = `${SOCIAL_BASE}/posts/search?q=${encodeURIComponent(
+    query
+  )}&_author=true`;
 
   const response = await fetch(url, {
     headers: {
