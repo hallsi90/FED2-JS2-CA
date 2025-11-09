@@ -159,3 +159,42 @@ export async function unfollowProfile(name: string) {
 
   return data.data; // return updated profile object
 }
+
+/**
+ * Edit own profile
+ * PUT /social/profiles/{name}
+ */
+export async function updateProfile(
+  name: string,
+  payload: {
+    bio?: string;
+    avatar?: { url: string; alt?: string };
+    banner?: { url: string; alt?: string };
+  }
+) {
+  const token = getToken();
+  if (!token) {
+    throw new Error("You must be logged in to edit your profile.");
+  }
+
+  const url = `${SOCIAL_BASE}/profiles/${encodeURIComponent(name)}`;
+
+  const response = await fetch(url, {
+    method: "PUT",
+    headers: {
+      ...getAuthHeaders(token),
+      "X-Noroff-API-Key": NOROFF_API_KEY,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const message =
+      data?.errors?.[0]?.message || "Could not edit this profile.";
+    throw new Error(message);
+  }
+
+  return data.data; // return updated profile object
+}

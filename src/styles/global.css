@@ -52,6 +52,10 @@
   margin-top: 1.5rem;
   font-weight: 600;
 }
+/* Profile bio - make sure line breaks */
+.profile-bio {
+  white-space: pre-line;
+}
 
 /* The styles that are here are from the vite setup! */
 

@@ -38,6 +38,17 @@ async function loadProfile() {
   const profileToLoad = requestedName || myName;
   const isMyProfile = profileToLoad === myName;
 
+  // show/hide edit profile link
+  const editProfileLink =
+    document.querySelector<HTMLAnchorElement>("#edit-profile-link");
+  if (editProfileLink) {
+    if (isMyProfile) {
+      editProfileLink.style.display = "inline-block";
+    } else {
+      editProfileLink.style.display = "none";
+    }
+  }
+
   // tell the user whose profile is being loaded
   showStatus(`Loading profile: ${profileToLoad}...`, "info");
 

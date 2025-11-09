@@ -35,13 +35,14 @@ export function renderProfileHeader(profile: Profile): string {
   <header class="profile-header"> 
    ${avatarHtml}
    <h1>${profile.name}</h1>
-   ${profile.bio ? `<p>${profile.bio}</p>` : ""}
+   ${profile.bio ? `<p class="profile-bio">${profile.bio}</p>` : ""}
    <ul class="profile-counts">
      <li>Posts: ${profile._count?.posts ?? 0}</li>
      <li>
      <button type="button" class="profile-count-btn" data-list="followers">
-     Followers: ${profile._count?.followers ?? 0}</li>
+     Followers: ${profile._count?.followers ?? 0}
      </button>
+     </li>
      <li>
        <button type="button" class="profile-count-btn" data-list="following">
          Following: ${profile._count?.following ?? 0}

@@ -25,7 +25,7 @@ export function renderProfileResult(profile: ProfileResult): string {
      <article class="profile-result">
        ${avatarHtml}
        <h2><a href="${profileLink}">${profile.name}</a></h2>
-       ${profile.bio ? `<p>${profile.bio}</p>` : ""} 
+       ${profile.bio ? `<p class="profile-bio">${profile.bio}</p>` : ""} 
      </article>
     `;
 }

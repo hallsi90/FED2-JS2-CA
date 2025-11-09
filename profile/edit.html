@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+    <title>Edit Profile</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="/">Feed</a>
+        <a href="/profile/">My Profile</a>
+        <a id="create-post-link" href="/post/create.html" class="hidden"
+          >Create Post</a
+        >
+        <a href="/login/">Login</a>
+      </nav>
+    </header>
+
+    <main id="page-root">
+      <h1>Edit Profile</h1>
+      <p id="edit-profile-status" aria-live="polite"></p>
+
+      <form id="editProfileForm">
+        <label for="avatarUrl">Avatar URL</label>
+        <input
+          id="avatarUrl"
+          name="avatarUrl"
+          type="url"
+          placeholder="https://..."
+        />
+
+        <label for="avatarAlt">Avatar alt text</label>
+        <input id="avatarAlt" name="avatarAlt" type="text" />
+
+        <label for="bio">Bio</label>
+        <textarea id="bio" name="bio" rows="3"></textarea>
+
+        <button type="submit">Save</button>
+      </form>
+    </main>
+
+    <script type="module" src="/src/pages/editProfile.ts"></script>
+  </body>
+</html>
