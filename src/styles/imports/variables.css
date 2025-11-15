@@ -5,6 +5,13 @@
   --text-color: #222;
   --border-color: #ddd;
 
+  --info-color: #0d3e80;
+  --info-background-color: #e9f1ff;
+  --error-color: #7b1b1b;
+  --error-background-color: #ffe9e9;
+  --success-color: #145e2b;
+  --success-background-color: #e7ffef;
+
   --radius-md: 0.5rem;
   --gap: 1rem;
 }
