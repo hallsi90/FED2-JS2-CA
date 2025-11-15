@@ -3,7 +3,7 @@
 
 import { getPostById, deletePost } from "../api/posts";
 import { renderFullPost } from "../ui/renderFullPost";
-import { setupAuthButtons } from "../utils/common";
+import { setupAuthButtons, updateStatus } from "../utils/common";
 import { getProfileName } from "../api/storage";
 
 const root = document.querySelector<HTMLElement>("#post-root");
@@ -21,24 +21,24 @@ async function loadPost() {
   const idParam = params.get("id");
 
   if (!idParam) {
-    showStatus("No post id provided.", "error");
+    updateStatus(status, "No post id provided.", "error");
     return; // stop here
   }
 
   const id = Number(idParam);
   if (Number.isNaN(id)) {
-    showStatus("Invalid post id", "error");
+    updateStatus(status, "Invalid post id", "error");
     return;
   }
 
-  showStatus("Loading post...", "info");
+  updateStatus(status, "Loading post...", "info");
 
   try {
     const post = await getPostById(id);
 
     // render post HTML
     root.innerHTML = renderFullPost(post);
-    showStatus(""); // clear message
+    updateStatus(status, ""); // clear message
 
     // show edit button only if this is MY post
     const currentUser = getProfileName(); // stored at login
@@ -67,7 +67,7 @@ async function loadPost() {
         if (!confirmed) return;
 
         try {
-          showStatus("Deleting post...", "info");
+          updateStatus(status, "Deleting post...", "info");
           await deletePost(post.id);
           // redirect to my profile
           const me = getProfileName();
@@ -78,9 +78,9 @@ async function loadPost() {
           }
         } catch (error) {
           if (error instanceof Error) {
-            showStatus(error.message, "error");
+            updateStatus(status, error.message, "error");
           } else {
-            showStatus("Could not delete post.", "error");
+            updateStatus(status, "Could not delete post.", "error");
           }
         }
       });
@@ -91,15 +91,9 @@ async function loadPost() {
     }
   } catch (error) {
     if (error instanceof Error) {
-      showStatus(error.message, "error");
+      updateStatus(status, error.message, "error");
     } else {
-      showStatus("Could not load this post.", "error");
+      updateStatus(status, "Could not load this post.", "error");
     }
   }
-}
-
-function showStatus(text: string, type: "error" | "info" | "" = "") {
-  if (!status) return;
-  status.textContent = text;
-  status.className = type;
 }

@@ -4,7 +4,7 @@
 import { requireAuth } from "../utils/authGuard";
 import { getProfile, updateProfile } from "../api/profiles";
 import { getProfileName } from "../api/storage";
-import { setupAuthButtons } from "../utils/common";
+import { setupAuthButtons, updateStatus } from "../utils/common";
 
 requireAuth();
 setupAuthButtons();
@@ -24,7 +24,7 @@ async function loadMyProfile() {
     return;
   }
 
-  showStatus("Loading profile...", "info");
+  updateStatus(statusEl, "Loading profile...", "info");
 
   try {
     const profile = await getProfile(myName);
@@ -33,9 +33,9 @@ async function loadMyProfile() {
     if (avatarAltInput) avatarAltInput.value = profile.avatar?.alt || "";
     if (bioInput) bioInput.value = profile.bio || "";
 
-    showStatus("");
+    updateStatus(statusEl, "");
   } catch (error) {
-    showStatus("Error loading profile", "error");
+    updateStatus(statusEl, "Error loading profile", "error");
   }
 }
 
@@ -45,7 +45,11 @@ if (form) {
 
     const myName = getProfileName();
     if (!myName) {
-      showStatus("You must be logged in to edit your profile.", "error");
+      updateStatus(
+        statusEl,
+        "You must be logged in to edit your profile.",
+        "error"
+      );
       return;
     }
 
@@ -70,25 +74,16 @@ if (form) {
     }
 
     try {
-      showStatus("Saving profile...", "info");
+      updateStatus(statusEl, "Saving profile...", "info");
       await updateProfile(myName, payload);
-      showStatus("Profile updated! Redirecting...", "success");
+      updateStatus(statusEl, "Profile updated! Redirecting...", "success");
       window.location.href = `/profile/?name=${encodeURIComponent(myName)}`;
     } catch (error) {
       if (error instanceof Error) {
-        showStatus(error.message, "error");
+        updateStatus(statusEl, error.message, "error");
       } else {
-        showStatus("Could not update profile.", "error");
+        updateStatus(statusEl, "Could not update profile.", "error");
       }
     }
   });
-}
-
-function showStatus(
-  text: string,
-  type: "error" | "success" | "info" | "" = ""
-) {
-  if (!statusEl) return;
-  statusEl.textContent = text;
-  statusEl.className = type;
 }

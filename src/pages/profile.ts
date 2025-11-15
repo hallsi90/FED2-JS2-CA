@@ -6,8 +6,12 @@ import { requireAuth } from "../utils/authGuard";
 import { getProfile, followProfile, unfollowProfile } from "../api/profiles";
 import { getProfileName } from "../api/storage";
 import { renderProfileHeader } from "../ui/renderProfile";
-import { renderPostCard } from "../ui/renderPostCard";
-import { setupAuthButtons, setupPostCardClicks } from "../utils/common";
+import { renderPostCard, type Post } from "../ui/renderPostCard";
+import {
+  setupAuthButtons,
+  setupPostCardClicks,
+  updateStatus,
+} from "../utils/common";
 
 setupAuthButtons();
 requireAuth(); // only logged in users can access this page
@@ -50,7 +54,7 @@ async function loadProfile() {
   }
 
   // tell the user whose profile is being loaded
-  showStatus(`Loading profile: ${profileToLoad}...`, "info");
+  updateStatus(statusEl, `Loading profile: ${profileToLoad}...`, "info");
 
   try {
     const profile = await getProfile(profileToLoad);
@@ -128,7 +132,8 @@ async function loadProfile() {
           // also restore posts view with the updated ones
           renderPostsView(updatedPostsWithAuthor, requestedName, myName);
 
-          showStatus(
+          updateStatus(
+            statusEl,
             nowFollowing
               ? `You are now following ${profileToLoad}.`
               : `You unfollowed ${profileToLoad}.`,
@@ -136,9 +141,9 @@ async function loadProfile() {
           );
         } catch (error) {
           if (error instanceof Error) {
-            showStatus(error.message, "error");
+            updateStatus(statusEl, error.message, "error");
           } else {
-            showStatus("Could not update follow status.", "error");
+            updateStatus(statusEl, "Could not update follow status.", "error");
           }
         } finally {
           setBusy(false);
@@ -217,25 +222,25 @@ async function loadProfile() {
     // 4) initial post render
     renderPostsView(postsWithAuthor, requestedName, myName);
 
-    showStatus("");
+    updateStatus(statusEl, "");
   } catch (error) {
     if (error instanceof Error) {
-      showStatus(error.message, "error");
+      updateStatus(statusEl, error.message, "error");
     } else {
-      showStatus("Could not load profile.", "error");
+      updateStatus(statusEl, "Could not load profile.", "error");
     }
   }
 }
 
 function renderPostsView(
-  posts: any[],
+  posts: Post[],
   requestedName: string | null,
   myName: string
 ) {
   if (!postsRoot) return;
 
   if (posts && posts.length > 0) {
-    const html = posts.map((post) => renderPostCard(post)).join("");
+    const html = posts.map((post: Post) => renderPostCard(post)).join("");
     postsRoot.innerHTML = html;
 
     // Make the profile's post cards clickable (same as in feed )
@@ -247,10 +252,4 @@ function renderPostsView(
       ? `<p>This user has no posts yet.</p>`
       : "<p>You have no posts yet.</p>";
   }
-}
-
-function showStatus(text: string, type: "error" | "info" | "" = "") {
-  if (!statusEl) return;
-  statusEl.textContent = text;
-  statusEl.className = type;
 }

@@ -8,7 +8,11 @@ import {
   renderProfileResult,
   type ProfileResult,
 } from "../ui/renderProfileResults";
-import { setupAuthButtons, setupPostCardClicks } from "../utils/common";
+import {
+  setupAuthButtons,
+  setupPostCardClicks,
+  updateStatus,
+} from "../utils/common";
 
 // container where all posts will be inserted
 const feedRoot = document.querySelector<HTMLElement>("#feed-root");
@@ -27,18 +31,18 @@ loadPosts();
 async function loadPosts() {
   if (!feedRoot) return;
 
-  showStatus("Loading posts...", "info");
+  updateStatus(feedStatus, "Loading posts...", "info");
 
   try {
     const posts: Post[] = await getAllPosts();
     allPosts = posts; // save for filtering
     renderPosts(posts);
-    showStatus(""); // clear message
+    updateStatus(feedStatus, ""); // clear message
   } catch (error) {
     if (error instanceof Error) {
-      showStatus(error.message, "error");
+      updateStatus(feedStatus, error.message, "error");
     } else {
-      showStatus("Could not load posts.", "error");
+      updateStatus(feedStatus, "Could not load posts.", "error");
     }
   }
 }
@@ -50,7 +54,7 @@ if (feedSearch) {
     // empty search -> show all posts
     if (value === "") {
       renderPosts(allPosts);
-      showStatus("");
+      updateStatus(feedStatus, "");
       return;
     }
 
@@ -58,14 +62,18 @@ if (feedSearch) {
     if (value.startsWith("@")) {
       const name = value.slice(1); // remove @
       if (name === "") {
-        showStatus("Type a profile name after @ to search profiles.", "info");
+        updateStatus(
+          feedStatus,
+          "Type a profile name after @ to search profiles.",
+          "info"
+        );
         return;
       }
       await handleProfileSearch(name, true);
       return;
     }
 
-    showStatus("Searching posts and profiles...", "info");
+    updateStatus(feedStatus, "Searching posts and profiles...", "info");
 
     try {
       // 1) API search posts (title/body) with _author=true
@@ -111,14 +119,14 @@ if (feedSearch) {
       }
 
       if (html === "") {
-        showStatus("No posts or profiles found.", "info");
+        updateStatus(feedStatus, "No posts or profiles found.", "info");
         renderHtml("");
       } else {
         renderHtml(html);
-        showStatus("");
+        updateStatus(feedStatus, "");
       }
     } catch (error) {
-      showStatus("Search failed. Please try again.", "error");
+      updateStatus(feedStatus, "Search failed. Please try again.", "error");
     }
   });
 }
@@ -135,19 +143,19 @@ async function handleProfileSearch(query: string, fromAtSearch = false) {
 
       // show different message if from @name search
       if (fromAtSearch) {
-        showStatus("No profiles found.", "info");
+        updateStatus(feedStatus, "No profiles found.", "info");
       } else {
-        showStatus("No posts or profiles found.", "info");
+        updateStatus(feedStatus, "No posts or profiles found.", "info");
       }
     } else {
       const html = profiles
         .map((profile: ProfileResult) => renderProfileResult(profile))
         .join("");
       renderHtml(html);
-      showStatus(""); // clear message
+      updateStatus(feedStatus, ""); // clear message
     }
   } catch (error) {
-    showStatus("Could not search profiles.", "error");
+    updateStatus(feedStatus, "Could not search profiles.", "error");
   }
 }
 
@@ -172,13 +180,4 @@ function renderHtml(html: string) {
 
   // If the HTML contains post cards, make them clickable
   setupPostCardClicks(feedRoot);
-}
-
-/**
- * Show a message above the feed
- */
-function showStatus(text: string, type: "error" | "info" | "" = ""): void {
-  if (!feedStatus) return;
-  feedStatus.textContent = text;
-  feedStatus.className = type;
 }

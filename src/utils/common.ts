@@ -67,3 +67,17 @@ export function setupPostCardClicks(container: HTMLElement): void {
     });
   });
 }
+
+/**
+ * Update a status message element with text and style.
+ * info, error, success
+ */
+export function updateStatus(
+  el: HTMLElement | null,
+  text: string,
+  type: "error" | "success" | "info" | "" = ""
+): void {
+  if (!el) return;
+  el.textContent = text;
+  el.className = type;
+}

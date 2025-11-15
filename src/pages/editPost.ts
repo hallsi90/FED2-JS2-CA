@@ -5,7 +5,7 @@
 import { requireAuth } from "../utils/authGuard";
 import { getPostById, updatePost, deletePost } from "../api/posts";
 import { getProfileName } from "../api/storage";
-import { setupAuthButtons } from "../utils/common";
+import { setupAuthButtons, updateStatus } from "../utils/common";
 
 setupAuthButtons();
 requireAuth(); // only logged in users can access this page
@@ -22,14 +22,14 @@ const params = new URLSearchParams(window.location.search);
 const idParam = params.get("id");
 
 if (!idParam) {
-  showStatus("No post ID provided.", "error");
+  updateStatus(statusEl, "No post ID provided.", "error");
 } else {
   // load the post to prefill the form
   loadPost(Number(idParam));
 }
 
 async function loadPost(id: number) {
-  showStatus("Loading post...", "info");
+  updateStatus(statusEl, "Loading post...", "info");
 
   try {
     const post = await getPostById(id);
@@ -37,7 +37,7 @@ async function loadPost(id: number) {
     // check ownership (extra safety in UI)
     const currentUser = getProfileName();
     if (currentUser && post.author?.name && post.author.name !== currentUser) {
-      showStatus("You can only edit your own posts.", "error");
+      updateStatus(statusEl, "You can only edit your own posts.", "error");
       // could also disable the form here
       if (form) {
         form.style.display = "none";
@@ -50,12 +50,12 @@ async function loadPost(id: number) {
     if (bodyInput) bodyInput.value = post.body || "";
     if (mediaInput) mediaInput.value = post.media?.url || "";
 
-    showStatus(""); // clear status
+    updateStatus(statusEl, ""); // clear status
   } catch (error) {
     if (error instanceof Error) {
-      showStatus(error.message, "error");
+      updateStatus(statusEl, error.message, "error");
     } else {
-      showStatus("Could not load post.", "error");
+      updateStatus(statusEl, "Could not load post.", "error");
     }
   }
 }
@@ -65,7 +65,7 @@ if (form) {
     event.preventDefault();
 
     if (!idParam) {
-      showStatus("Missing post ID.", "error");
+      updateStatus(statusEl, "Missing post ID.", "error");
       return;
     }
 
@@ -76,7 +76,7 @@ if (form) {
     const mediaUrl = mediaInput?.value.trim() || "";
 
     if (!title) {
-      showStatus("Title is required.", "error");
+      updateStatus(statusEl, "Title is required.", "error");
       return;
     }
 
@@ -99,30 +99,21 @@ if (form) {
     }
 
     try {
-      showStatus("Updating post...", "info");
+      updateStatus(statusEl, "Updating post...", "info");
       const updated = await updatePost(postId, payload);
 
-      showStatus("Post updated! Redirecting...", "success");
+      updateStatus(statusEl, "Post updated! Redirecting...", "success");
 
       // redirect to the single post view
       window.location.href = `/post/?id=${updated.id}`;
     } catch (error) {
       if (error instanceof Error) {
-        showStatus(error.message, "error");
+        updateStatus(statusEl, error.message, "error");
       } else {
-        showStatus("Could not update post.", "error");
+        updateStatus(statusEl, "Could not update post.", "error");
       }
     }
   });
-}
-
-function showStatus(
-  text: string,
-  type: "error" | "success" | "info" | "" = ""
-) {
-  if (!statusEl) return;
-  statusEl.textContent = text;
-  statusEl.className = type;
 }
 
 /**
@@ -133,7 +124,7 @@ const deleteBtn = document.querySelector<HTMLButtonElement>("#delete-post-btn");
 if (deleteBtn) {
   deleteBtn.addEventListener("click", async () => {
     if (!idParam) {
-      showStatus("Missing post ID.", "error");
+      updateStatus(statusEl, "Missing post ID.", "error");
       return;
     }
 
@@ -143,7 +134,7 @@ if (deleteBtn) {
     if (!confirmed) return;
 
     try {
-      showStatus("Deleting post...", "info");
+      updateStatus(statusEl, "Deleting post...", "info");
       await deletePost(Number(idParam));
 
       const me = getProfileName();
@@ -154,9 +145,9 @@ if (deleteBtn) {
       }
     } catch (error) {
       if (error instanceof Error) {
-        showStatus(error.message, "error");
+        updateStatus(statusEl, error.message, "error");
       } else {
-        showStatus("Could not delete post.", "error");
+        updateStatus(statusEl, "Could not delete post.", "error");
       }
     }
   });
