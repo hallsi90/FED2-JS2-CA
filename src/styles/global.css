@@ -1,157 +1,90 @@
 /**
- * Global styles
-*/
+ * GLOBAL STYLES
+ */
+@import url("./imports/variables.css");
+@import url("./imports/forms.css");
+@import url("./imports/header.css");
+@import url("./imports/profile.css");
+@import url("./imports/feed.css");
+@import url("./imports/post.css");
+@import url("./imports/messages.css");
 
-/****************** SOME TEMPORARY STYLING ************************/
-/* Hide "Search Posts" text before search bar */
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
-
-/* Hide Create Post link when not logged in */
-.hidden {
-  display: none !important;
-}
-
-/* Following/followers list */
-.profile-list-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-/* Back to posts from following/followers lists */
-#back-to-posts-btn {
-  background: none;
-  border: none;
-  color: var(--primary-color, #2a6f97);
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-#back-to-posts-btn:hover {
-  text-decoration: underline;
-}
-
-/* Edit post link to edit form */
-.edit-post-link,
-.delete-post-button {
-  display: inline-block;
-  margin-top: 1rem;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-/* Profile header if profiles are found in normal search (without @)*/
-.search-section-title {
-  margin-top: 1.5rem;
-  font-weight: 600;
-}
-/* Profile bio - make sure line breaks */
-.profile-bio {
-  white-space: pre-line;
-}
-
-/* The styles that are here are from the vite setup! */
-
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
   min-height: 100vh;
+  background: var(--background-color);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  letter-spacing: 0.3px;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+main {
+  max-width: 960px;
+  width: 100%;
+  margin: 1.5rem auto 2.5rem;
+  padding: 0 1.25rem;
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+section {
+  margin-bottom: 1.5rem;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+/* links */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #3178c6aa);
+a:hover {
+  text-decoration: underline;
 }
 
-.card {
-  padding: 2em;
+/* ---------- shared images / avatars ---------- */
+
+.post-card img,
+.profile-result img,
+.profile-avatar,
+.profile-avatar-small {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  display: block;
 }
 
-.read-the-docs {
-  color: #888;
+.profile-avatar {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
 }
 
+.profile-avatar-small {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+}
+
+/* Buttons */
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
+  border-radius: 0.4rem;
+  border: none;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.95rem;
+  font-weight: bold;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--primary-color);
+  color: var(--surface-color);
   cursor: pointer;
-  transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+  background-color: var(--surface-color);
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
 }
