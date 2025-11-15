@@ -8,7 +8,7 @@ import {
   renderProfileResult,
   type ProfileResult,
 } from "../ui/renderProfileResults";
-import { setupAuthButtons } from "../utils/common";
+import { setupAuthButtons, setupPostCardClicks } from "../utils/common";
 
 // container where all posts will be inserted
 const feedRoot = document.querySelector<HTMLElement>("#feed-root");
@@ -159,6 +159,9 @@ function renderPosts(posts: Post[]) {
   // turn each post into HTML and join them
   const html = posts.map((post) => renderPostCard(post)).join("");
   feedRoot.innerHTML = html;
+
+  // Makes the whole card clickable (except links)
+  setupPostCardClicks(feedRoot);
 }
 
 /** Render raw HTML to the feed (used for profile search results)
@@ -166,6 +169,9 @@ function renderPosts(posts: Post[]) {
 function renderHtml(html: string) {
   if (!feedRoot) return;
   feedRoot.innerHTML = html;
+
+  // If the HTML contains post cards, make them clickable
+  setupPostCardClicks(feedRoot);
 }
 
 /**

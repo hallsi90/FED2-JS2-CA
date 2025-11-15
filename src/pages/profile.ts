@@ -7,7 +7,7 @@ import { getProfile, followProfile, unfollowProfile } from "../api/profiles";
 import { getProfileName } from "../api/storage";
 import { renderProfileHeader } from "../ui/renderProfile";
 import { renderPostCard } from "../ui/renderPostCard";
-import { setupAuthButtons } from "../utils/common";
+import { setupAuthButtons, setupPostCardClicks } from "../utils/common";
 
 setupAuthButtons();
 requireAuth(); // only logged in users can access this page
@@ -237,6 +237,9 @@ function renderPostsView(
   if (posts && posts.length > 0) {
     const html = posts.map((post) => renderPostCard(post)).join("");
     postsRoot.innerHTML = html;
+
+    // Make the profile's post cards clickable (same as in feed )
+    setupPostCardClicks(postsRoot);
   } else {
     // no posts
     const isOtherUser = Boolean(requestedName && requestedName !== myName);

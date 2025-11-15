@@ -2,7 +2,6 @@
 // For small post preview (used in feed, profile)
 
 // small UI helper to turn a post object into HTML
-
 export interface Post {
   id: number;
   title: string;
@@ -22,13 +21,9 @@ export interface Post {
  * We return a string so the feed page can join many of these.
  */
 export function renderPostCard(post: Post): string {
-  // fallback values
   const title = post.title || "Untitled post";
+
   const authorName = post.author?.name;
-
-  // link to the single post page with ?id=POST_ID
-  const postLink = `/post/?id=${post.id}`;
-
   const authorHtml = authorName
     ? `<a href="/profile/?name=${encodeURIComponent(
         authorName
@@ -42,17 +37,16 @@ export function renderPostCard(post: Post): string {
       }" class="post-image"/>`
     : "";
 
+  const bodyPreview = post.body
+    ? `${post.body.substring(0, 120)}${post.body.length > 120 ? "..." : ""}`
+    : "";
+
   return `
-    <article class="post-card">
-    ${imageHtml}
-    <h2><a href="${postLink}">${title}</a></h2>
-    <p class="post-meta">by ${authorHtml}</p>
-    ${
-      post.body
-        ? `<p class="post-body">${post.body.substring(0, 120)}...</p>`
-        : ""
-    }
-    <a class="post-read-more" href="${postLink}">View post</a>
-   </article>
+    <article class="post-card" data-post-id="${post.id}">
+      ${imageHtml}
+      <h2 class="post-card-title">${title}</h2>
+      <p class="post-meta">by ${authorHtml}</p>
+      ${bodyPreview ? `<p class="post-body">${bodyPreview}</p>` : ""}
+    </article>
   `;
 }

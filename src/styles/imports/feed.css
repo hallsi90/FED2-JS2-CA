@@ -24,8 +24,15 @@
 /* Post card layout used on the feed and in profile lists */
 .post-card {
   background: var(--surface-color);
-  border: 1px solid rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: 1rem 1.2rem;
   margin-bottom: 1rem;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
