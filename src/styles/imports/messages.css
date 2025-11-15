@@ -1,0 +1,27 @@
+/* Styles for informational, error, and success messages */
+
+.info,
+.error,
+.success {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.info {
+  background: var(--info-background-color);
+  color: var(--info-color);
+}
+
+.error {
+  background: var(--error-background-color);
+  color: var(--error-color);
+}
+
+.success {
+  background: var(--success-background-color);
+  color: var(--success-color);
+}
