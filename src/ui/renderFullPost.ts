@@ -1,6 +1,8 @@
 // src/ui/renderFullPost.ts
 // For full post layout on the single post page
 
+import { formatDate } from "../utils/formatDate";
+
 export interface FullPost {
   id: number;
   title: string;
@@ -166,20 +168,4 @@ function renderComments(comments: FullPost["comments"]): string {
       ${items}
     </section>
   `;
-}
-
-/**
- * Format date string to readable format
- */
-function formatDate(value?: string): string | null {
-  if (!value) return null;
-
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return null;
-
-  return date.toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
 }
