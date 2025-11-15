@@ -1,0 +1,31 @@
+/**
+ * Feed styles
+ * - search label helper
+ * - feed post cards
+ * - "Profiles" heading in combined search results
+ */
+
+/* Visually hidden text (used for the search label above the search bar) */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Heading shown above profile results when searching posts + profiles */
+.search-section-title {
+  margin-top: 1.5rem;
+  font-weight: 600;
+}
+
+/* Post card layout used on the feed and in profile lists */
+.post-card {
+  background: var(--surface-color);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+}
