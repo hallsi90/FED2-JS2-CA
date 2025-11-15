@@ -45,19 +45,20 @@ async function loadPost() {
     const postAuthor = post.author?.name;
 
     if (currentUser && postAuthor && currentUser === postAuthor) {
+      const actionsWrapper = document.createElement("div");
+      actionsWrapper.className = "post-actions";
+
       // EDIT link
       const editPostLink = document.createElement("a");
       editPostLink.href = `/post/edit.html?id=${post.id}`;
       editPostLink.textContent = "Edit Post";
-      editPostLink.className = "edit-post-link";
-      // stick it at the bottom of the post
-      root.appendChild(editPostLink);
+      editPostLink.className = "post-actions-button";
 
       // DELETE button
       const deleteBtn = document.createElement("button");
       deleteBtn.textContent = "Delete Post";
-      deleteBtn.className = "delete-post-button";
       deleteBtn.type = "button";
+      deleteBtn.className = "post-actions-button";
 
       deleteBtn.addEventListener("click", async () => {
         const confirmed = window.confirm(
@@ -84,7 +85,9 @@ async function loadPost() {
         }
       });
 
-      root.appendChild(deleteBtn);
+      actionsWrapper.appendChild(editPostLink);
+      actionsWrapper.appendChild(deleteBtn);
+      root.appendChild(actionsWrapper);
     }
   } catch (error) {
     if (error instanceof Error) {
