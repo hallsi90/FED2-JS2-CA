@@ -20,3 +20,8 @@ header nav a {
 header nav a:hover {
   color: var(--primary-color);
 }
+
+/* Hide Create Post link in header when not logged in */
+.hidden {
+  display: none !important;
+}
