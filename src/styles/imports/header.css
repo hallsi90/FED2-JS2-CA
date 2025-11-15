@@ -1,0 +1,22 @@
+header {
+  background: var(--surface-color);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+header nav {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1rem 1.25rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+header nav a {
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+header nav a:hover {
+  color: var(--primary-color);
+}
