@@ -11,6 +11,10 @@ export interface FullPost {
   };
   author?: {
     name: string;
+    avatar?: {
+      url: string;
+      alt?: string;
+    };
   };
   created?: string;
   reactions?: Array<{
@@ -19,7 +23,7 @@ export interface FullPost {
   }>;
   comments?: Array<{
     id: number;
-    body: string;
+    body?: string;
     owner: string;
     created: string;
   }>;
@@ -34,30 +38,64 @@ export interface FullPost {
  */
 export function renderFullPost(post: FullPost): string {
   const title = post.title || "Untitled post";
+
+  // Author name + profile link
   const authorName = post.author?.name;
 
-  const authorHtml = authorName
+  const authorLinkHtml = authorName
     ? `<a href="/profile/?name=${encodeURIComponent(
         authorName
       )}">${authorName}</a>`
     : "Unknown author";
 
+  // Author avatar
+  const avatarUrl = post.author?.avatar?.url;
+  const avatarAlt =
+    post.author?.avatar?.alt || authorName || "Author profile picture";
+
+  const avatarHtml = avatarUrl
+    ? `<img src="${avatarUrl}" alt="${avatarAlt}" class="post-author-avatar"/>`
+    : "";
+
+  // Created date
+  const createdLabel = formatDate(post.created);
+  const metaHtml = createdLabel
+    ? `<span class="single-post-meta">Posted ${createdLabel}</span>`
+    : "";
+
+  // Header combining avatar + author + meta
+  const headerHtml = `
+    <header class="single-post-header">
+      ${avatarHtml}
+      <div class="single-post-header-main">
+        <span class="single-post-author-name">${authorLinkHtml}</span>
+        ${metaHtml}
+      </div>
+    </header>
+  `;
+
+  // Main image
   const imageHtml = post.media?.url
     ? `<img src="${post.media.url}" alt="${
         post.media.alt || title
-      }" class="post-image"/>`
+      }" class="post-main-image"/>`
     : "";
 
-  const bodyHtml = post.body ? `<p>${post.body}</p>` : "<p>No content.</p>";
+  // Body content
+  const bodyText = post.body?.trim();
+  const bodyHtml = bodyText
+    ? `<p class="single-post-body">${bodyText}</p>`
+    : `<p class="single-post-body">No content.</p>`;
 
+  // Reactions and comments
   const reactionsHtml = renderReactions(post.reactions);
   const commentsHtml = renderComments(post.comments);
 
   return `
     <article class="single-post">
+    ${headerHtml}
+    <h1 class="single-post-title">${title}</h1>
     ${imageHtml}
-    <h1>${title}</h1>
-    <p class="post-meta">by ${authorHtml}</p>
     ${bodyHtml}
     ${reactionsHtml}
     ${commentsHtml}
@@ -65,50 +103,83 @@ export function renderFullPost(post: FullPost): string {
   `;
 }
 
+/**
+ * Show reactions in a compact row
+ */
 function renderReactions(reactions: FullPost["reactions"]): string {
   if (!reactions || reactions.length === 0) {
-    return `<section class="post-reactions"><p>No reactions yet.</p></section>`;
+    return `<div class="post-reactions"><span>No reactions yet.</span></div>`;
   }
 
   const items = reactions
     .map(
       (reaction) =>
-        `<li>${reaction.symbol} <span>× ${reaction.count}</span></li>`
-    )
-    .join("");
-
-  return `
-   <section class="post-reactions">
-    <h2>Reactions</h2>
-     <ul>
-      ${items}
-     </ul>
-    </section>
-   `;
-}
-
-function renderComments(comments: FullPost["comments"]): string {
-  if (!comments || comments.length === 0) {
-    return `<section class="post-comments"><p>No comments yet.</p></section>`;
-  }
-
-  const items = comments
-    .map(
-      (comment) => `
-        <li class="comment">
-          <p class="comment-owner">${comment.owner}</p>
-          <p class="comment-body">${comment.body}</p>
-      </li>
+        `
+        <div class="post-reaction">
+          <span>${reaction.symbol}</span>
+          <span>${reaction.count}</span>
+        </div>
       `
     )
     .join("");
 
+  return `<div class="post-reactions">${items}</div>`;
+}
+
+/**
+ * Show comments list under the post
+ */
+function renderComments(comments: FullPost["comments"]): string {
+  if (!comments || comments.length === 0) {
+    return `
+    <section class="post-comments" aria-label="Comments">
+      <p>No comments yet.</p>
+    </section>
+    `;
+  }
+
+  const items = comments
+    .map((comment) => {
+      const commentDate = formatDate(comment.created);
+      const dateHtml = commentDate
+        ? `<span class="post-comment-date">${commentDate}</span>`
+        : "";
+
+      // Trim comment text and handle missing/empty values safely
+      const commentBody = comment.body?.trim() || "";
+
+      return `
+        <article class="post-comment">
+          <div class="post-comment-header">
+            <span class="post-comment-author">${comment.owner}</span>
+            ${dateHtml}
+          </div>
+          <div>${commentBody}</div>
+        </article>
+      `;
+    })
+    .join("");
+
   return `
-    <section class="post-comments">
-    <h2>Comments</h2>
-      <ul>
-        ${items}
-      </ul>
+    <section class="post-comments" aria-label="Comments">
+      <h2 class="post-comments-title">Comments</h2>
+      ${items}
     </section>
   `;
+}
+
+/**
+ * Format date string to readable format
+ */
+function formatDate(value?: string): string | null {
+  if (!value) return null;
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 }
