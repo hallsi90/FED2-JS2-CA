@@ -29,26 +29,28 @@ export function renderProfileHeader(profile: Profile): string {
     ? `<img src="${profile.avatar.url}" alt="${
         profile.avatar.alt || profile.name
       }" class="profile-avatar" />`
-    : "";
+    : `<div class="profile-avatar" aria-hidden="true"></div>`;
 
   return `
   <header class="profile-header"> 
    ${avatarHtml}
-   <h1>${profile.name}</h1>
-   ${profile.bio ? `<p class="profile-bio">${profile.bio}</p>` : ""}
-   <ul class="profile-counts">
-     <li>Posts: ${profile._count?.posts ?? 0}</li>
-     <li>
-     <button type="button" class="profile-count-btn" data-list="followers">
-     Followers: ${profile._count?.followers ?? 0}
-     </button>
-     </li>
-     <li>
-       <button type="button" class="profile-count-btn" data-list="following">
+   <div class="profile-header-main">
+    <h1>${profile.name}</h1>
+     ${profile.bio ? `<p class="profile-bio">${profile.bio}</p>` : ""}
+     <ul class="profile-counts">
+       <li>Posts: ${profile._count?.posts ?? 0}</li>
+       <li>
+         <button type="button" class="profile-count-btn"     data-list="followers">
+         Followers: ${profile._count?.followers ?? 0}
+        </button>
+       </li>
+      <li>
+         <button type="button" class="profile-count-btn" data-list="following">
          Following: ${profile._count?.following ?? 0}
-       </button>
-     </li>
-   </ul>
+        </button>
+       </li>
+     </ul>
+   </div>
   </header>
 `;
 }
