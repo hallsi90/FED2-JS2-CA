@@ -1,0 +1,107 @@
+/* ---------- Profile layout & header ---------- */
+
+.profile-header {
+  background: var(--surface-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+
+/* Large circular avatar in the profile header */
+.profile-header .profile-avatar {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 999px;
+  flex: 0 0 auto;
+}
+
+.profile-header h1 {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 1.4rem;
+}
+
+/* Right-hand side of the header (name, bio, counts */
+.profile-header-main {
+  flex: 1;
+}
+
+/* Posts, followers and following counts */
+.profile-counts {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ---------- Followers / following lists ---------- */
+
+/* Header row above followers/following list */
+.profile-list-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Buttons that open followers/following lists */
+.profile-count-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+}
+.profile-count-btn:hover {
+  color: var(--primary-color);
+}
+
+/* "Back to posts" button inside followers/following view */
+#back-to-posts-btn {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+#back-to-posts-btn:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Edit profile link (styled as button) ---------- */
+
+#edit-profile-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  color: inherit;
+}
+#edit-profile-link:hover {
+  border-color: var(--primary-color);
+}
+
+/* ---------- Bio & profile cards ---------- */
+
+/* Make sure line breaks from the textarea show up in the profile bio */
+.profile-bio {
+  white-space: pre-line;
+}
+
+/* Profile cards used in search results and followers/following lists */
+.profile-result {
+  background: var(--surface-color);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+}
