@@ -57,7 +57,7 @@ export function setupPostCardClicks(container: HTMLElement): void {
     card.addEventListener("click", (event) => {
       const target = event.target as HTMLElement;
 
-      // If the user clicked a link (title, author, "View post"), let the browser follow that link instead.
+      // If the user clicked the author link, let the browser follow that link instead.
       if (target.closest("a")) {
         return;
       }
