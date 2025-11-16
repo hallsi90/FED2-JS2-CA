@@ -6,9 +6,12 @@ import { SOCIAL_BASE, getAuthHeaders, NOROFF_API_KEY } from "./config";
 import { getToken } from "./storage";
 
 /**
- * Fetch all posts
- * The social endpoints are authenticated, so we must send the token.
- * We can later add query params like ?_author=true if we want more data.
+ * Fetch all posts for the currently logged in user.
+ *
+ * Sends a GET request to `/posts?_author=true`and returns an array of posts, including each post's author information.
+ *
+ * @returns {Promise<any[]>} - Resolves with an array of post objects from the API.
+ * @throws {Error} - Throws an error if the user is not logged in or if the API request fails.
  */
 export async function getAllPosts() {
   const token = getToken();
