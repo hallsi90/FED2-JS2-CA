@@ -1,20 +1,32 @@
 // src/utils/common.ts
-// Handles login state and logout button visibility
-// Handles create post link visibility
+// Shared UI helpers:
+// - Login/Logout button handling
+// - Create Post link visibility
+// - Clickable post cards
+// - Reusable status/message helpers
 
 import { getToken, clearAuth } from "../api/storage";
 
+/**
+ * Handles clicking the "Log Out" button:
+ * - Prevents default link navigation
+ * - Clears all auth data
+ * - Redirects to the feed page
+ */
 function handleLogoutClick(event: Event) {
-  event.preventDefault(); // prevent default link behavior
-  clearAuth(); // removes accessToken and profileName from localStorage
-  window.location.href = "/"; // redirect to feed after logout
+  event.preventDefault();
+  clearAuth();
+  window.location.href = "/";
 }
 
+/**
+ * Update the header's login/logout state and toggle the Create Post link.
+ * - If logged in: "Log Out" is shown and Create Post link is visible.
+ * - If logged out: "Log In" is shown and Create Post link is hidden.
+ */
 export function setupAuthButtons() {
-  // login/logout link
   const loginLink =
     document.querySelector<HTMLAnchorElement>('a[href="/login/"]');
-  // create post link
   const createPostLink =
     document.querySelector<HTMLAnchorElement>("#create-post-link");
 
@@ -23,16 +35,15 @@ export function setupAuthButtons() {
   const token = getToken();
 
   if (token) {
-    // User is logged in -> show logout button
+    // Logged in -> show "Log Out"
     loginLink.textContent = "Log Out";
-    // clicking the link logs the user out
     loginLink.onclick = handleLogoutClick;
 
     if (createPostLink) {
       createPostLink.classList.remove("hidden");
     }
   } else {
-    // User is not logged in -> show log in button
+    // Logged out -> show "Log In"
     loginLink.textContent = "Log In";
     loginLink.onclick = null;
 
@@ -42,8 +53,9 @@ export function setupAuthButtons() {
   }
 }
 
-/** Make each post card clickable to open the single post page.
- * Clicking on links inside the card still works normally.
+/**
+ * Makes each post card clickable to open the single post page,
+ * while still allowing internal links (like the author link) to work normally.
  */
 export function setupPostCardClicks(container: HTMLElement): void {
   if (!container) return;
@@ -57,20 +69,21 @@ export function setupPostCardClicks(container: HTMLElement): void {
     card.addEventListener("click", (event) => {
       const target = event.target as HTMLElement;
 
-      // If the user clicked the author link, let the browser follow that link instead.
+      // If clicking a link inside the card, do not override its behavior
       if (target.closest("a")) {
         return;
       }
 
-      // Otherwise, clicking anywhere on the card goes to the single post page
       window.location.href = `/post/?id=${postId}`;
     });
   });
 }
 
 /**
- * Update a status message element with text and style.
- * info, error, success
+ * Update a message/status element by:
+ * - Setting the text
+ * - Replacing its class with the given type
+ * Used for inline status messages (loading, errors, success).
  */
 export function updateStatus(
   el: HTMLElement | null,
@@ -83,7 +96,8 @@ export function updateStatus(
 }
 
 /**
- * Show a message inside a target element (used for forms).
+ * Show a message inside a specific element.
+ * Used in forms like login, register, etc.
  */
 export function showMessage(
   element: HTMLElement | null,
@@ -92,5 +106,5 @@ export function showMessage(
 ) {
   if (!element) return;
   element.textContent = text;
-  element.className = type; // Set class to style the message (error, success, info)
+  element.className = type;
 }

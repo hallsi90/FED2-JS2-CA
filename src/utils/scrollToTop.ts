@@ -1,4 +1,6 @@
 // src/utils/scrollToTop.ts
+// Creates and controls a floating "Scroll to Top" button used on all pages.
+
 /**
  * Add a floating "scroll to top" button to the page.
  * The button appears after scrolling and scrolls smoothly to the top when clicked.
@@ -24,8 +26,12 @@ export function setupScrollToTop() {
     btn.style.display = window.scrollY > 100 ? "flex" : "none";
   });
 
-  // Smooth scroll on click
+  // Smooth scroll on click (with fallback)
   btn.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if ("scrollBehavior" in document.documentElement.style) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      window.scrollTo(0, 0);
+    }
   });
 }

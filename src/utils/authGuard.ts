@@ -1,12 +1,12 @@
-// authGuard.ts
-// check if logged in, maybe redirect if not
+// src/utils/authGuard.ts
+// Ensures a user is authenticated before accessing protected pages.
 
 import { getToken } from "../api/storage";
 
 /**
- * Check if the user is logged in.
- * If there is no token in localStorage, redirect to login page.
- * Import this function to any page that require login (like create/edit/delete post)
+ * Redirects to the login page if no valid auth token is found.
+ * Should be imported and called at the top of any page that requires authentication
+ * (e.g., create post, edit post, edit profile, etc.).
  */
 export function requireAuth() {
   const token = getToken();
