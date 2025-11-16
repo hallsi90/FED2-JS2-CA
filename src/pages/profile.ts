@@ -61,6 +61,10 @@ async function loadProfile() {
   try {
     const profile = await getProfile(profileToLoad);
 
+    // Update browser tab title with profile name
+    const safeName = profile.name?.trim() || "Profile";
+    document.title = `${safeName} - Profile | Noroff Social App`;
+
     // make sure posts always have author info
     const rawPosts = (profile as any).posts as any[] | undefined;
     const postsWithAuthor = rawPosts

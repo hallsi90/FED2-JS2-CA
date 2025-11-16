@@ -42,6 +42,10 @@ async function loadPost() {
     root.innerHTML = renderFullPost(post);
     updateStatus(status, ""); // clear message
 
+    // Set browser tab title based on post title
+    const safeTitle = post.title?.trim() || "Post";
+    document.title = `${safeTitle} - Post | Noroff Social App`;
+
     // show edit button only if this is MY post
     const currentUser = getProfileName(); // stored at login
     const postAuthor = post.author?.name;
