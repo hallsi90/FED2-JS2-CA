@@ -8,7 +8,8 @@ import { getToken } from "./storage";
 /**
  * Fetch all posts for the currently logged in user.
  *
- * Sends a GET request to `/posts?_author=true`and returns an array of posts, including each post's author information.
+ * Sends a GET request to `/posts?_author=true`and returns an array of posts,
+ * including each post's author information.
  *
  * @returns {Promise<any[]>} - Resolves with an array of post objects from the API.
  * @throws {Error} - Throws an error if the user is not logged in or if the API request fails.
@@ -16,12 +17,12 @@ import { getToken } from "./storage";
 export async function getAllPosts() {
   const token = getToken();
 
-  // if the user is not logged in, we cannot fetch posts
+  // If the user is not logged in, we cannot fetch posts
   if (!token) {
     throw new Error("You must be logged in to view posts.");
   }
 
-  // include author info
+  // Include author info
   const url = `${SOCIAL_BASE}/posts?_author=true`;
 
   const response = await fetch(url, {
@@ -63,7 +64,7 @@ export async function getPostById(id: number) {
   const data = await response.json();
 
   if (!response.ok) {
-    // if id is wrong, API will return 404
+    // If id is wrong, API will return 404
     const message = data?.errors?.[0]?.message || "Could not load this post.";
     throw new Error(message);
   }
@@ -100,7 +101,20 @@ export async function searchPosts(query: string) {
 }
 
 /**
- * Create a new post
+ * Create a new post for the currently logged in user.
+ *
+ * Sends a POST request to `/posts` with the given payload, and returns
+ * the created post from the API.
+ *
+ * @param {{
+ *  title: string;
+ *  body?: string;
+ *  media?: { url: string; alt?: string };
+ *  tags?: string[];
+ * }} payload - The post data to create, where `title` is required and
+ * `body`, `media`, and `tags` are optional.
+ * @returns {Promise<any>} - Resolves with the created post object from the API.
+ * @throws {Error} - Throws an error if the user is not logged in or if the API request fails.
  */
 export async function createPost(payload: {
   title: string;
