@@ -7,8 +7,9 @@ import { getProfileName } from "../api/storage";
 import { setupAuthButtons, updateStatus } from "../utils/common";
 import { setupScrollToTop } from "../utils/scrollToTop";
 
-requireAuth();
+// Run on load
 setupAuthButtons();
+requireAuth();
 setupScrollToTop();
 
 const form = document.querySelector<HTMLFormElement>("#editProfileForm");
@@ -37,7 +38,11 @@ async function loadMyProfile() {
 
     updateStatus(statusEl, "");
   } catch (error) {
-    updateStatus(statusEl, "Error loading profile", "error");
+    if (error instanceof Error) {
+      updateStatus(statusEl, error.message, "error");
+    } else {
+      updateStatus(statusEl, "Error loading profile.", "error");
+    }
   }
 }
 

@@ -1,6 +1,6 @@
 // src/pages/profile.ts
-// load profile data + follow/unfollow
-// show users profiles and their posts
+// Load profile data + follow/unfollow
+// Show users profiles and their posts
 
 import { requireAuth } from "../utils/authGuard";
 import { getProfile, followProfile, unfollowProfile } from "../api/profiles";
@@ -15,7 +15,7 @@ import {
 import { setupScrollToTop } from "../utils/scrollToTop";
 
 setupAuthButtons();
-requireAuth(); // only logged in users can access this page
+requireAuth();
 setupScrollToTop();
 
 const statusEl = document.querySelector<HTMLElement>("#profile-status");
@@ -35,16 +35,16 @@ async function loadProfile() {
   const myName = getProfileName();
 
   if (!myName) {
-    // somehow no name in storage = not logged in properly -> redirect to login
+    // Somehow no name in storage = not logged in properly -> redirect to login
     window.location.href = "/login/";
     return;
   }
 
-  // this is the profile to load
+  // This is the profile to load
   const profileToLoad = requestedName || myName;
   const isMyProfile = profileToLoad === myName;
 
-  // show/hide edit profile link
+  // Show/hide edit profile link
   const editProfileLink =
     document.querySelector<HTMLAnchorElement>("#edit-profile-link");
   if (editProfileLink) {
@@ -55,7 +55,7 @@ async function loadProfile() {
     }
   }
 
-  // tell the user whose profile is being loaded
+  // Tell the user whose profile is being loaded
   updateStatus(statusEl, `Loading profile: ${profileToLoad}...`, "info");
 
   try {
@@ -65,7 +65,7 @@ async function loadProfile() {
     const safeName = profile.name?.trim() || "Profile";
     document.title = `${safeName} - Profile | Noroff Social App`;
 
-    // make sure posts always have author info
+    // Make sure posts always have author info
     const rawPosts = (profile as any).posts as any[] | undefined;
     const postsWithAuthor = rawPosts
       ? rawPosts.map((post) => ({
@@ -77,13 +77,13 @@ async function loadProfile() {
     // 1) Render header (avatar, name, counts)
     profileRoot.innerHTML = renderProfileHeader(profile);
 
-    // 2) show follow/unfollow button if not my profile
+    // 2) Show follow/unfollow button if not my profile
     if (!isMyProfile) {
       const btn = document.createElement("button");
       btn.id = "follow-toggle-btn";
       btn.type = "button";
 
-      // check if I already follow this profile
+      // Check if I already follow this profile
       const isFollowing =
         Array.isArray((profile as any).followers) &&
         (profile as any).followers.some(
@@ -92,7 +92,7 @@ async function loadProfile() {
 
       btn.textContent = isFollowing ? "Unfollow" : "Follow";
 
-      // small disabled helper
+      // Small disabled helper
       const setBusy = (busy: boolean) => {
         btn.disabled = busy;
       };
@@ -102,13 +102,13 @@ async function loadProfile() {
           setBusy(true);
 
           if (btn.textContent === "Follow") {
-            // 1) tell API
+            // 1) Tell API
             await followProfile(profileToLoad);
           } else {
             await unfollowProfile(profileToLoad);
           }
 
-          // 2) fetch the full updated profile to get new counts
+          // 2) Fetch the full updated profile to get new counts
           const updatedProfile = await getProfile(profileToLoad);
           const updatedRawPosts = (updatedProfile as any).posts as
             | any[]
@@ -120,13 +120,13 @@ async function loadProfile() {
               }))
             : [];
 
-          // 3) re-render header with updated counts
+          // 3) Re-render header with updated counts
           profileRoot.innerHTML = renderProfileHeader(updatedProfile);
 
-          // 4) re-attach the button (because we just overwrote the header)
+          // 4) Re-attach the button (because we just overwrote the header)
           profileRoot.appendChild(btn);
 
-          // 5) update button text based on the new follow status
+          // 5) Update button text based on the new follow status
           const nowFollowing =
             Array.isArray((updatedProfile as any).followers) &&
             (updatedProfile as any).followers.some(
@@ -135,7 +135,7 @@ async function loadProfile() {
 
           btn.textContent = nowFollowing ? "Unfollow" : "Follow";
 
-          // also restore posts view with the updated ones
+          // Also restore posts view with the updated ones
           renderPostsView(updatedPostsWithAuthor, requestedName, myName);
 
           updateStatus(
@@ -159,7 +159,7 @@ async function loadProfile() {
       profileRoot.appendChild(btn);
     }
 
-    // 3) followers/following lists toggle
+    // 3) Followers/following lists toggle
     profileRoot.addEventListener("click", (event) => {
       const target = event.target as HTMLElement;
       if (!target.matches(".profile-count-btn")) return;
@@ -206,8 +206,8 @@ async function loadProfile() {
         })
         .join("");
 
-      // reuse the posts area to show the list
-      const heading = listType.charAt(0).toUpperCase() + listType.slice(1); // capitalize Followers/Following list heading
+      // Reuse the posts area to show the list
+      const heading = listType.charAt(0).toUpperCase() + listType.slice(1); // Capitalize Followers/Following list heading
 
       postsRoot.innerHTML = `
       <div class="profile-list-header">
@@ -217,21 +217,24 @@ async function loadProfile() {
       ${peopleHtml}
       `;
 
-      // handle back to posts button
+      // Handle back to posts button
       const backBtn = document.querySelector<HTMLElement>("#back-to-posts-btn");
       if (backBtn) {
         backBtn.addEventListener("click", () => {
-          // re-render the original posts list
+          // Re-render the original posts list
           renderPostsView(postsWithAuthor, requestedName, myName);
         });
       }
     });
 
-    // 4) initial post render
+    // 4) Initial post render
     renderPostsView(postsWithAuthor, requestedName, myName);
 
     updateStatus(statusEl, "");
   } catch (error) {
+    // Update browser tab title on error
+    document.title = "Profile not found | Noroff Social App";
+
     if (error instanceof Error) {
       updateStatus(statusEl, error.message, "error");
     } else {
@@ -254,7 +257,7 @@ function renderPostsView(
     // Make the profile's post cards clickable (same as in feed )
     setupPostCardClicks(postsRoot);
   } else {
-    // no posts
+    // No posts
     const isOtherUser = Boolean(requestedName && requestedName !== myName);
     postsRoot.innerHTML = isOtherUser
       ? `<p>This user has no posts yet.</p>`

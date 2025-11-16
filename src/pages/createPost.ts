@@ -1,13 +1,13 @@
 // src/pages/createPost.ts
-// handles the create post form
+// Handles the create post form
 
 import { requireAuth } from "../utils/authGuard";
 import { createPost } from "../api/posts";
-import { setupAuthButtons } from "../utils/common";
+import { setupAuthButtons, showMessage } from "../utils/common";
 import { setupScrollToTop } from "../utils/scrollToTop";
 
 setupAuthButtons();
-requireAuth(); // make sure only logged-in users can access this page
+requireAuth();
 setupScrollToTop();
 
 const form = document.querySelector<HTMLFormElement>("#createPostForm");
@@ -18,59 +18,56 @@ if (form) {
     event.preventDefault();
 
     const formData = new FormData(form);
-    const title = formData.get("title") as string;
-    const body = (formData.get("body") as string) || "";
-    const mediaUrl = (formData.get("mediaUrl") as string) || "";
 
-    // basic validation first
+    // Trim all values once
+    const title = (formData.get("title") as string).trim();
+    const body = ((formData.get("body") as string) || "").trim();
+    const mediaUrl = ((formData.get("mediaUrl") as string) || "").trim();
+
+    // Basic validation first
     if (!title) {
-      showMessage("Title is required.", "error");
+      showMessage(message, "Title is required.", "error");
       return;
     }
 
-    // build payload for API
+    // Build payload for API
     const payload: {
       title: string;
       body?: string;
       media?: { url: string; alt?: string };
     } = { title };
 
-    if (body.trim() !== "") {
-      payload.body = body.trim();
+    if (body !== "") {
+      payload.body = body;
     }
 
-    // only add media if user entered a URL
-    if (mediaUrl.trim() !== "") {
+    // Only add media if user entered a URL
+    if (mediaUrl !== "") {
       payload.media = {
-        url: mediaUrl.trim(),
-        alt: title,
+        url: mediaUrl,
+        alt: title, // Trimmed title
       };
     }
 
     try {
-      showMessage("Creating post...", "info");
+      showMessage(message, "Creating post...", "info");
 
       const newPost = await createPost(payload);
 
-      showMessage("Post created! Redirecting...", "success");
+      showMessage(message, "Post created! Redirecting...", "success");
 
-      // redirect to the single post page so user can see their new post
+      // Redirect to the single post page so user can see their new post
       window.location.href = `/post/?id=${newPost.id}`;
     } catch (error) {
       if (error instanceof Error) {
-        showMessage(error.message, "error");
+        showMessage(message, error.message, "error");
       } else {
-        showMessage("Something went wrong while creating the post.", "error");
+        showMessage(
+          message,
+          "Something went wrong while creating the post.",
+          "error"
+        );
       }
     }
   });
-}
-
-function showMessage(
-  text: string,
-  type: "error" | "success" | "info" = "info"
-) {
-  if (!message) return;
-  message.textContent = text;
-  message.className = type;
 }

@@ -1,6 +1,8 @@
 // src/pages/editPost.ts
-// edit/delete an existing post
-// load a post by id, prefill the form, allow editing and saving changes or deleting the post
+// Edit/delete an existing post:
+// - Load a post by ID
+// - Prefill the form
+// - Allow editing/saving or deleting the post
 
 import { requireAuth } from "../utils/authGuard";
 import { getPostById, updatePost, deletePost } from "../api/posts";
@@ -9,7 +11,7 @@ import { setupAuthButtons, updateStatus } from "../utils/common";
 import { setupScrollToTop } from "../utils/scrollToTop";
 
 setupAuthButtons();
-requireAuth(); // only logged in users can access this page
+requireAuth();
 setupScrollToTop();
 
 const form = document.querySelector<HTMLFormElement>("#editPostForm");
@@ -19,15 +21,19 @@ const titleInput = document.querySelector<HTMLInputElement>("#title");
 const bodyInput = document.querySelector<HTMLTextAreaElement>("#body");
 const mediaInput = document.querySelector<HTMLInputElement>("#mediaUrl");
 
-// get id from URL
+// Get ID from URL
 const params = new URLSearchParams(window.location.search);
 const idParam = params.get("id");
+const postId = idParam ? Number(idParam) : NaN;
 
-if (!idParam) {
-  updateStatus(statusEl, "No post ID provided.", "error");
+if (!idParam || Number.isNaN(postId)) {
+  updateStatus(statusEl, "Invalid or missing post ID.", "error");
+  if (form) {
+    form.style.display = "none";
+  }
 } else {
-  // load the post to prefill the form
-  loadPost(Number(idParam));
+  // Load the post to prefill the form
+  loadPost(postId);
 }
 
 async function loadPost(id: number) {
@@ -36,23 +42,22 @@ async function loadPost(id: number) {
   try {
     const post = await getPostById(id);
 
-    // check ownership (extra safety in UI)
+    // Check ownership (extra safety in UI)
     const currentUser = getProfileName();
     if (currentUser && post.author?.name && post.author.name !== currentUser) {
       updateStatus(statusEl, "You can only edit your own posts.", "error");
-      // could also disable the form here
       if (form) {
         form.style.display = "none";
       }
       return;
     }
 
-    // prefill form
+    // Prefill form
     if (titleInput) titleInput.value = post.title || "";
     if (bodyInput) bodyInput.value = post.body || "";
     if (mediaInput) mediaInput.value = post.media?.url || "";
 
-    updateStatus(statusEl, ""); // clear status
+    updateStatus(statusEl, ""); // Clear status
   } catch (error) {
     if (error instanceof Error) {
       updateStatus(statusEl, error.message, "error");
@@ -66,12 +71,10 @@ if (form) {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    if (!idParam) {
-      updateStatus(statusEl, "Missing post ID.", "error");
+    if (!idParam || Number.isNaN(postId)) {
+      updateStatus(statusEl, "Missing or invalid post ID.", "error");
       return;
     }
-
-    const postId = Number(idParam);
 
     const title = titleInput?.value.trim() || "";
     const body = bodyInput?.value.trim() || "";
@@ -82,7 +85,7 @@ if (form) {
       return;
     }
 
-    // build payload
+    // Build payload
     const payload: {
       title: string;
       body?: string;
@@ -106,7 +109,7 @@ if (form) {
 
       updateStatus(statusEl, "Post updated! Redirecting...", "success");
 
-      // redirect to the single post view
+      // Redirect to the single post view
       window.location.href = `/post/?id=${updated.id}`;
     } catch (error) {
       if (error instanceof Error) {
@@ -125,8 +128,8 @@ const deleteBtn = document.querySelector<HTMLButtonElement>("#delete-post-btn");
 
 if (deleteBtn) {
   deleteBtn.addEventListener("click", async () => {
-    if (!idParam) {
-      updateStatus(statusEl, "Missing post ID.", "error");
+    if (!idParam || Number.isNaN(postId)) {
+      updateStatus(statusEl, "Missing or invalid post ID.", "error");
       return;
     }
 
@@ -137,7 +140,7 @@ if (deleteBtn) {
 
     try {
       updateStatus(statusEl, "Deleting post...", "info");
-      await deletePost(Number(idParam));
+      await deletePost(postId);
 
       const me = getProfileName();
       if (me) {

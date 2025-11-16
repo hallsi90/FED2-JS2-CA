@@ -1,8 +1,8 @@
 // src/pages/login.ts
-// handles login form submission
+// Handles login form submission
 
 import { loginUser } from "../api/auth";
-import { setupAuthButtons } from "../utils/common";
+import { setupAuthButtons, showMessage } from "../utils/common";
 import { setupScrollToTop } from "../utils/scrollToTop";
 
 setupAuthButtons();
@@ -14,47 +14,33 @@ const message = document.querySelector<HTMLElement>("#loginMessage");
 
 if (form) {
   form.addEventListener("submit", async (event) => {
-    event.preventDefault(); // stop the page from reloading
+    event.preventDefault(); // Stop the page from reloading
 
     // Read the values from the form
     const formData = new FormData(form);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+    const email = (formData.get("email") as string).trim();
+    const password = (formData.get("password") as string).trim();
 
     // Basic check before calling the API
     if (!email || !password) {
-      showMessage("Please enter both email and password.", "error");
+      showMessage(message, "Please enter both email and password.", "error");
       return;
     }
 
     try {
-      showMessage("Logging in...", "info");
+      showMessage(message, "Logging in...", "info");
 
       // Call the API function (this will save the token if it works)
       await loginUser({ email, password });
-      showMessage("Login successful! Redirecting...", "success");
-
+      showMessage(message, "Login successful! Redirecting...", "success");
       // Redirect the user to the feed/posts page
       window.location.href = "/";
     } catch (error) {
       if (error instanceof Error) {
-        showMessage(error.message, "error");
+        showMessage(message, error.message, "error");
       } else {
-        showMessage("Login failed. Please try again.", "error");
+        showMessage(message, "Login failed. Please try again.", "error");
       }
     }
   });
-}
-
-/**
- * Helper to show a message under the form.
- */
-
-function showMessage(
-  text: string,
-  type: "error" | "success" | "info" = "info"
-) {
-  if (!message) return;
-  message.textContent = text;
-  message.className = type; // set class to style the message (error, success, info)
 }

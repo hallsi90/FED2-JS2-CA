@@ -1,8 +1,8 @@
 // src/pages/register.ts
-// handles register form submission
+// Handles register form submission
 
 import { registerUser } from "../api/auth";
-import { setupAuthButtons } from "../utils/common";
+import { setupAuthButtons, showMessage } from "../utils/common";
 import { setupScrollToTop } from "../utils/scrollToTop";
 
 setupAuthButtons();
@@ -14,41 +14,36 @@ const message = document.querySelector<HTMLElement>("#registerMessage");
 
 if (form) {
   form.addEventListener("submit", async (event) => {
-    event.preventDefault(); // stop the page from reloading
+    event.preventDefault(); // Stop the page from reloading
 
     // Read the values from the form
     const formData = new FormData(form);
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+    const name = (formData.get("name") as string).trim();
+    const email = (formData.get("email") as string).trim();
+    const password = (formData.get("password") as string).trim();
 
     // The API has rules, so let's check the basics first
     if (!name || !email || !password) {
-      showMessage("Please fill in all fields.", "error");
+      showMessage(message, "Please fill in all fields.", "error");
       return;
     }
 
     try {
-      showMessage("Creating account...", "info");
+      showMessage(message, "Creating account...", "info");
       await registerUser({ name, email, password });
-      showMessage("Account created! Redirecting to login...", "success");
+      showMessage(
+        message,
+        "Account created! Redirecting to login...",
+        "success"
+      );
       // Redirect to login page
       window.location.href = "/login/";
     } catch (error) {
       if (error instanceof Error) {
-        showMessage(error.message, "error");
+        showMessage(message, error.message, "error");
       } else {
-        showMessage("Could not register user.", "error");
+        showMessage(message, "Could not register user.", "error");
       }
     }
   });
-}
-
-function showMessage(
-  text: string,
-  type: "error" | "success" | "info" = "info"
-) {
-  if (!message) return;
-  message.textContent = text;
-  message.className = type; // set class to style the message (error, success, info)
 }

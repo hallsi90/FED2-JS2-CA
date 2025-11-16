@@ -1,5 +1,5 @@
 // src/pages/feed.ts
-// fetch posts and render them on the feed page
+// Fetch posts and render them on the feed page
 
 import { getAllPosts, searchPosts } from "../api/posts";
 import { searchProfiles } from "../api/profiles";
@@ -17,17 +17,17 @@ import { setupScrollToTop } from "../utils/scrollToTop";
 
 setupScrollToTop();
 
-// container where all posts will be inserted
+// Container where all posts will be inserted
 const feedRoot = document.querySelector<HTMLElement>("#feed-root");
-// place to show loading / error messages
+// Place to show loading / error messages
 const feedStatus = document.querySelector<HTMLElement>("#feed-status");
-// search bar
+// Search bar
 const feedSearch = document.querySelector<HTMLInputElement>("#feed-search");
 
-// original list of posts
+// Original list of posts
 let allPosts: Post[] = [];
 
-// run immediately
+// Run immediately
 setupAuthButtons();
 loadPosts();
 
@@ -54,14 +54,14 @@ if (feedSearch) {
   feedSearch.addEventListener("input", async (event) => {
     const value = (event.target as HTMLInputElement).value.trim();
 
-    // empty search -> show all posts
+    // Empty search -> show all posts
     if (value === "") {
       renderPosts(allPosts);
       updateStatus(feedStatus, "");
       return;
     }
 
-    // if user types @name -> search profiles directly
+    // If user types @name -> search profiles directly
     if (value.startsWith("@")) {
       const name = value.slice(1); // remove @
       if (name === "") {
@@ -82,13 +82,13 @@ if (feedSearch) {
       // 1) API search posts (title/body) with _author=true
       const remoteResults: Post[] = await searchPosts(value);
 
-      // 2) local author-name search on the feed posts (not possible via API)
+      // 2) Local author-name search on the feed posts (not possible via API)
       const valueLower = value.toLowerCase();
       const localAuthorMatches: Post[] = allPosts.filter((post) =>
         post.author?.name?.toLowerCase().includes(valueLower)
       );
 
-      // 3) merge local + remote results, avoiding duplicates
+      // 3) Merge local + remote results, avoiding duplicates
       const mergedById = new Map<number, Post>();
       for (const p of localAuthorMatches) {
         mergedById.set(p.id, p);
@@ -98,10 +98,10 @@ if (feedSearch) {
       }
       const combinedPosts = Array.from(mergedById.values());
 
-      // 4) search for profiles too
+      // 4) Search for profiles too
       const profiles: ProfileResult[] = await searchProfiles(value);
 
-      // render results
+      // Render results
       let html = "";
 
       if (combinedPosts.length > 0) {
@@ -113,7 +113,7 @@ if (feedSearch) {
           .map((profile: ProfileResult) => renderProfileResult(profile))
           .join("");
 
-        // add small heading if both are shown
+        // Add small heading if both are shown
         if (combinedPosts.length > 0) {
           html += `<h2 class="search-section-title">Profiles</h2>`;
         }
@@ -167,7 +167,7 @@ async function handleProfileSearch(query: string, fromAtSearch = false) {
  */
 function renderPosts(posts: Post[]) {
   if (!feedRoot) return;
-  // turn each post into HTML and join them
+  // Turn each post into HTML and join them
   const html = posts.map((post) => renderPostCard(post)).join("");
   feedRoot.innerHTML = html;
 
@@ -175,7 +175,8 @@ function renderPosts(posts: Post[]) {
   setupPostCardClicks(feedRoot);
 }
 
-/** Render raw HTML to the feed (used for profile search results)
+/**
+ * Render raw HTML to the feed (used for profile search results)
  */
 function renderHtml(html: string) {
   if (!feedRoot) return;

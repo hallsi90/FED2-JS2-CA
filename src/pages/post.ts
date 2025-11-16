@@ -1,5 +1,5 @@
 // src/pages/post.ts
-// loads a single post by ID
+// Loads a single post by ID
 
 import { getPostById, deletePost } from "../api/posts";
 import { renderFullPost } from "../ui/renderFullPost";
@@ -10,27 +10,23 @@ import { setupScrollToTop } from "../utils/scrollToTop";
 const root = document.querySelector<HTMLElement>("#post-root");
 const status = document.querySelector<HTMLElement>("#post-status");
 
-// run on load
+// Run on load
 setupAuthButtons();
-loadPost();
 setupScrollToTop();
+loadPost();
 
 async function loadPost() {
   if (!root || !status) return;
 
-  // get post ID from URL
+  // Get post ID from URL
   const params = new URLSearchParams(window.location.search);
   const idParam = params.get("id");
+  const id = idParam ? Number(idParam) : NaN;
 
-  if (!idParam) {
-    updateStatus(status, "No post id provided.", "error");
-    return; // stop here
-  }
-
-  const id = Number(idParam);
-  if (Number.isNaN(id)) {
-    updateStatus(status, "Invalid post id", "error");
-    return;
+  if (!idParam || Number.isNaN(id)) {
+    updateStatus(status, "Invalid or missing post id.", "error");
+    document.title = "Post not found | Noroff Social App";
+    return; // Stop here
   }
 
   updateStatus(status, "Loading post...", "info");
@@ -38,16 +34,16 @@ async function loadPost() {
   try {
     const post = await getPostById(id);
 
-    // render post HTML
+    // Render post HTML
     root.innerHTML = renderFullPost(post);
-    updateStatus(status, ""); // clear message
+    updateStatus(status, ""); // Clear message
 
     // Set browser tab title based on post title
     const safeTitle = post.title?.trim() || "Post";
     document.title = `${safeTitle} - Post | Noroff Social App`;
 
-    // show edit button only if this is MY post
-    const currentUser = getProfileName(); // stored at login
+    // Show edit button only if this is MY post
+    const currentUser = getProfileName(); // Stored at login
     const postAuthor = post.author?.name;
 
     if (currentUser && postAuthor && currentUser === postAuthor) {

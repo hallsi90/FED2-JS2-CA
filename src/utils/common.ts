@@ -81,3 +81,16 @@ export function updateStatus(
   el.textContent = text;
   el.className = type;
 }
+
+/**
+ * Show a message inside a target element (used for forms).
+ */
+export function showMessage(
+  element: HTMLElement | null,
+  text: string,
+  type: "error" | "success" | "info" = "info"
+) {
+  if (!element) return;
+  element.textContent = text;
+  element.className = type; // Set class to style the message (error, success, info)
+}
