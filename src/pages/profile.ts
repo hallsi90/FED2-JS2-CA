@@ -182,10 +182,12 @@ async function loadProfile() {
       const peopleHtml = people
         .map((person) => {
           const avatarHtml = person.avatar?.url
-            ? `<img src="${person.avatar.url}" alt="${
-                person.avatar.alt || person.name
-              }" class="profile-avatar-small" />`
+            ? `<img src="${person.avatar.url}" 
+            alt="${person.avatar.alt || person.name}" 
+            class="profile-avatar-small"
+            loading="lazy"/>`
             : "";
+
           return `
           <article class="profile-result">
           ${avatarHtml}

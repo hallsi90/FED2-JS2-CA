@@ -26,9 +26,10 @@ export interface Profile {
  */
 export function renderProfileHeader(profile: Profile): string {
   const avatarHtml = profile.avatar?.url
-    ? `<img src="${profile.avatar.url}" alt="${
-        profile.avatar.alt || profile.name
-      }" class="profile-avatar" />`
+    ? `<img src="${profile.avatar.url}" 
+       alt="${profile.avatar.alt || profile.name}"
+       class="profile-avatar" 
+       loading="lazy"/>`
     : `<div class="profile-avatar" aria-hidden="true"></div>`;
 
   return `

@@ -13,9 +13,10 @@ export interface ProfileResult {
 
 export function renderProfileResult(profile: ProfileResult): string {
   const avatarHtml = profile.avatar?.url
-    ? `<img src="${profile.avatar.url}" alt="${
-        profile.avatar.alt || profile.name
-      }" class="profile-avatar" />`
+    ? `<img src="${profile.avatar.url}" 
+       alt="${profile.avatar.alt || profile.name}" 
+       class="profile-avatar"  
+       loading="lazy"/>`
     : "";
 
   // link to your profile page structure e.g. /profile/?name=USERNAME

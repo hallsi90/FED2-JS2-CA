@@ -56,7 +56,10 @@ export function renderFullPost(post: FullPost): string {
     post.author?.avatar?.alt || authorName || "Author profile picture";
 
   const avatarHtml = avatarUrl
-    ? `<img src="${avatarUrl}" alt="${avatarAlt}" class="post-author-avatar"/>`
+    ? `<img src="${avatarUrl}" 
+       alt="${avatarAlt}" 
+       class="post-author-avatar" 
+       loading="lazy"/>`
     : "";
 
   // Created date
@@ -78,9 +81,10 @@ export function renderFullPost(post: FullPost): string {
 
   // Main image
   const imageHtml = post.media?.url
-    ? `<img src="${post.media.url}" alt="${
-        post.media.alt || title
-      }" class="post-main-image"/>`
+    ? `<img src="${post.media.url}" 
+       alt="${post.media.alt || title}" 
+       class="post-main-image" 
+       loading="lazy"/>`
     : "";
 
   // Body content

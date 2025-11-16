@@ -32,9 +32,11 @@ export function renderPostCard(post: Post): string {
 
   // only show an image if media.url exists
   const imageHtml = post.media?.url
-    ? `<img src="${post.media.url}" alt="${
-        post.media.alt || title
-      }" class="post-image"/>`
+    ? `<img src="${post.media.url}" 
+       alt="${post.media.alt || title}" 
+       class="post-image"
+       loading="lazy" 
+      />`
     : "";
 
   const bodyPreview = post.body
