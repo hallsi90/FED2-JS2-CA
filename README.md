@@ -1,5 +1,7 @@
 # FED2-JS2-CA - JavaScript 2 Course Assignment
 
+![Project Preview](./public/preview.png)
+
 **HTML**, **CSS**, **TypeScript**, **Vite**
 
 Front-end client for a social media application built using **HTML**, **CSS**, **TypeScript**, and **Vite**.  
