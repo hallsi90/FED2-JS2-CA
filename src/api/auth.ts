@@ -1,5 +1,5 @@
 // src/api/auth.ts
-// register, login and (optionally) create API key
+// register and login
 
 import { AUTH_BASE, getJsonHeaders } from "./config";
 import { saveAuth } from "./storage";
@@ -64,7 +64,11 @@ export async function registerUser(body: RegisterBody) {
 
 /**
  * Log in an existing user at POST https://v2.api.noroff.dev/auth/login
- * On success we store the token + name in localStorage.
+ * and store the access token and name in localStorage on success.
+ *
+ * @param {LoginBody} body - The login credentials containing email and password.
+ * @returns {Promise<{ data: { accessToken: string; name: string } }>} - Resolves with the full API response from the login endpoint.
+ * @throws {Error} - Throws an error if the login request fails or the API returns an error.
  */
 export async function loginUser(body: LoginBody) {
   const response = await fetch(`${AUTH_BASE}/login`, {
@@ -91,36 +95,3 @@ export async function loginUser(body: LoginBody) {
 
   return data;
 }
-
-/**
- * (Optional) - not sure if I need api key yet!
- * Create an API key for the logged-in user.
- * Endpoint: POST /auth/create-api-key
- * This requires that the user is already logged in, because we have to send the Authorization header.
- */
-/*
-export async function createAPIKey(
-  token: string,
-  name = "Course Assignment Key"
-) {
-  const response = await fetch(`${AUTH_BASE}/create-api-key`, {
-    method: "POST",
-    headers: {
-      ...getJsonHeaders(),
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ name }),
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    const message =
-      data?.errors?.[0]?.message ||
-      "Could not create API key. Please try again.";
-    throw new Error(message);
-  }
-
-  return data;
-}
-*/
