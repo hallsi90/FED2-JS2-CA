@@ -89,7 +89,16 @@ button:hover {
   border: 1px solid var(--primary-color);
 }
 
-/* Visually hidden text (used for the search label above the search bar on feed and for the H1 "My Profile" on profile page) */
+/* ---------- Footer ---------- */
+footer {
+  margin-top: auto;
+  padding: 1rem 1.25rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--muted-text-color);
+}
+
+/* Visually hidden text (used for the search label above the search bar on feed and for the H2 "My Profile" on profile page) */
 .visually-hidden {
   position: absolute;
   width: 1px;
