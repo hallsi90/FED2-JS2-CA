@@ -4,9 +4,11 @@
 import { requireAuth } from "../utils/authGuard";
 import { createPost } from "../api/posts";
 import { setupAuthButtons } from "../utils/common";
+import { setupScrollToTop } from "../utils/scrollToTop";
 
 setupAuthButtons();
 requireAuth(); // make sure only logged-in users can access this page
+setupScrollToTop();
 
 const form = document.querySelector<HTMLFormElement>("#createPostForm");
 const message = document.querySelector<HTMLElement>("#create-message");

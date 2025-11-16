@@ -6,9 +6,11 @@ import { requireAuth } from "../utils/authGuard";
 import { getPostById, updatePost, deletePost } from "../api/posts";
 import { getProfileName } from "../api/storage";
 import { setupAuthButtons, updateStatus } from "../utils/common";
+import { setupScrollToTop } from "../utils/scrollToTop";
 
 setupAuthButtons();
 requireAuth(); // only logged in users can access this page
+setupScrollToTop();
 
 const form = document.querySelector<HTMLFormElement>("#editPostForm");
 const statusEl = document.querySelector<HTMLElement>("#edit-status");

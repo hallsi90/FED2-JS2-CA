@@ -12,9 +12,11 @@ import {
   setupPostCardClicks,
   updateStatus,
 } from "../utils/common";
+import { setupScrollToTop } from "../utils/scrollToTop";
 
 setupAuthButtons();
 requireAuth(); // only logged in users can access this page
+setupScrollToTop();
 
 const statusEl = document.querySelector<HTMLElement>("#profile-status");
 const profileRoot = document.querySelector<HTMLElement>("#profile-root");

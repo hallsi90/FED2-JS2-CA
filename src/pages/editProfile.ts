@@ -5,9 +5,11 @@ import { requireAuth } from "../utils/authGuard";
 import { getProfile, updateProfile } from "../api/profiles";
 import { getProfileName } from "../api/storage";
 import { setupAuthButtons, updateStatus } from "../utils/common";
+import { setupScrollToTop } from "../utils/scrollToTop";
 
 requireAuth();
 setupAuthButtons();
+setupScrollToTop();
 
 const form = document.querySelector<HTMLFormElement>("#editProfileForm");
 const statusEl = document.querySelector<HTMLElement>("#edit-profile-status");

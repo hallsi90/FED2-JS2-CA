@@ -3,8 +3,10 @@
 
 import { loginUser } from "../api/auth";
 import { setupAuthButtons } from "../utils/common";
+import { setupScrollToTop } from "../utils/scrollToTop";
 
 setupAuthButtons();
+setupScrollToTop();
 
 // Grab the form and the place where we show messages
 const form = document.querySelector<HTMLFormElement>("#loginForm");

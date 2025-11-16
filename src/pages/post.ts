@@ -5,6 +5,7 @@ import { getPostById, deletePost } from "../api/posts";
 import { renderFullPost } from "../ui/renderFullPost";
 import { setupAuthButtons, updateStatus } from "../utils/common";
 import { getProfileName } from "../api/storage";
+import { setupScrollToTop } from "../utils/scrollToTop";
 
 const root = document.querySelector<HTMLElement>("#post-root");
 const status = document.querySelector<HTMLElement>("#post-status");
@@ -12,6 +13,7 @@ const status = document.querySelector<HTMLElement>("#post-status");
 // run on load
 setupAuthButtons();
 loadPost();
+setupScrollToTop();
 
 async function loadPost() {
   if (!root || !status) return;

@@ -13,6 +13,9 @@ import {
   setupPostCardClicks,
   updateStatus,
 } from "../utils/common";
+import { setupScrollToTop } from "../utils/scrollToTop";
+
+setupScrollToTop();
 
 // container where all posts will be inserted
 const feedRoot = document.querySelector<HTMLElement>("#feed-root");
