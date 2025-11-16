@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/src/styles/global.css" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-    <title>Profile</title>
+    <title>Profile | Noroff Social App</title>
   </head>
   <body>
     <header>
-      <nav>
+      <nav aria-label="Main navigation">
         <a href="/">Feed</a>
         <a href="/profile/">My Profile</a>
         <a id="create-post-link" href="/post/create.html" class="hidden"
@@ -20,16 +20,19 @@
     </header>
 
     <main id="page-root">
-      <p id="profile-status" aria-live="polite"></p>
+      <!-- Status messages (loading, error)  -->
+      <p id="profile-status" role="status" aria-live="polite"></p>
 
       <!-- profile header -->
       <section aria-labelledby="profile-heading">
-        <h2 id="profile-heading" class="visually-hidden">My Profile</h2>
+        <h2 id="profile-heading" class="visually-hidden">User Profile</h2>
         <div id="profile-root"></div>
       </section>
 
+      <!-- Edit profile link (only visible for own profile) -->
       <a id="edit-profile-link" href="/profile/edit.html">Edit Profile</a>
 
+      <!-- User's posts list -->
       <h3 id="my-posts-heading">My posts</h3>
       <div
         id="profile-posts"

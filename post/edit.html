@@ -9,7 +9,7 @@
   </head>
   <body>
     <header>
-      <nav>
+      <nav aria-label="Main navigation">
         <a href="/">Feed</a>
         <a href="/profile/">My Profile</a>
         <a id="create-post-link" href="/post/create.html" class="hidden"
@@ -23,7 +23,7 @@
       <h1>Edit Post</h1>
 
       <!-- status / errors -->
-      <p id="edit-status" aria-live="polite"></p>
+      <p id="edit-status" role="status" aria-live="polite"></p>
 
       <form id="editPostForm">
         <label for="title">Title</label>
@@ -43,7 +43,7 @@
         <button type="submit">Save Changes</button>
       </form>
 
-      <!-- delete post -->
+      <!-- Delete post button -->
       <button id="delete-post-btn" type="button">Delete Post</button>
     </main>
 

@@ -9,7 +9,7 @@
   </head>
   <body>
     <header>
-      <nav>
+      <nav aria-label="Main navigation">
         <a href="/">Feed</a>
         <a href="/profile/">My Profile</a>
         <a id="create-post-link" href="/post/create.html" class="hidden"
@@ -21,7 +21,9 @@
 
     <main id="page-root">
       <h1>Edit Profile</h1>
-      <p id="edit-profile-status" aria-live="polite"></p>
+
+      <!-- Status messages for loading/saving  -->
+      <p id="edit-profile-status" role="status" aria-live="polite"></p>
 
       <form id="editProfileForm">
         <label for="avatarUrl">Avatar URL</label>

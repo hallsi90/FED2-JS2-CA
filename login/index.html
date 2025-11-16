@@ -9,7 +9,7 @@
   </head>
   <body>
     <header>
-      <nav>
+      <nav aria-label="Main navigation">
         <a href="/">Feed</a>
         <a href="/profile/">My Profile</a>
         <a id="create-post-link" href="/post/create.html" class="hidden"
@@ -21,6 +21,10 @@
 
     <main id="page-root">
       <h1>Log in to your account</h1>
+
+      <!-- Status messages (loading, error) -->
+      <p id="loginMessage" role="status" aria-live="polite"></p>
+
       <form id="loginForm">
         <label for="email">Email</label>
         <input id="email" name="email" type="email" required />
@@ -30,8 +34,6 @@
 
         <button type="submit">Log In</button>
       </form>
-
-      <p id="loginMessage" aria-live="polite"></p>
 
       <p class="auth-hint">
         Don't have an account?

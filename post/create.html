@@ -9,7 +9,7 @@
   </head>
   <body>
     <header>
-      <nav>
+      <nav aria-label="Main navigation">
         <a href="/">Feed</a>
         <a href="/profile/">My Profile</a>
         <a id="create-post-link" href="/post/create.html" class="hidden"
@@ -21,6 +21,9 @@
 
     <main id="page-root">
       <h1>Create a new post</h1>
+
+      <!-- Status messages (loading, success, error) -->
+      <p id="create-message" role="status" aria-live="polite"></p>
 
       <form id="createPostForm">
         <label for="title">Title</label>
@@ -39,8 +42,6 @@
 
         <button type="submit">Create Post</button>
       </form>
-
-      <p id="create-message" aria-live="polite"></p>
     </main>
 
     <footer>&copy; 2025 Ingelinn Hallseth</footer>

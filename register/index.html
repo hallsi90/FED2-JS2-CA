@@ -9,7 +9,7 @@
   </head>
   <body>
     <header>
-      <nav>
+      <nav aria-label="Main navigation">
         <a href="/">Feed</a>
         <a href="/profile/">My Profile</a>
         <a id="create-post-link" href="/post/create.html" class="hidden"
@@ -21,6 +21,10 @@
 
     <main id="page-root">
       <h1>Register here</h1>
+
+      <!-- Status messages (loading, error) -->
+      <p id="registerMessage" role="status" aria-live="polite"></p>
+
       <form id="registerForm">
         <label for="name">Username</label>
         <input id="name" name="name" type="text" required />
@@ -33,8 +37,6 @@
 
         <button type="submit">Register</button>
       </form>
-
-      <p id="registerMessage" aria-live="polite"></p>
     </main>
 
     <footer>&copy; 2025 Ingelinn Hallseth</footer>

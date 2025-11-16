@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/src/styles/global.css" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-    <title>Post</title>
+    <title>Post | Noroff Social App</title>
   </head>
   <body>
     <header>
-      <nav>
+      <nav aria-label="Main navigation">
         <a href="/">Feed</a>
         <a href="/profile/">My Profile</a>
         <a id="create-post-link" href="/post/create.html" class="hidden"
@@ -20,8 +20,10 @@
     </header>
 
     <main id="page-root">
-      <p id="post-status" aria-live="polite"></p>
+      <!-- Status messages (loading, error)  -->
+      <p id="post-status" role="status" aria-live="polite"></p>
 
+      <!-- Full post will be rendered here -->
       <div id="post-root"></div>
     </main>
 

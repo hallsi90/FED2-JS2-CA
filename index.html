@@ -9,7 +9,7 @@
   </head>
   <body>
     <header>
-      <nav>
+      <nav aria-label="Main navigation">
         <a href="/">Feed</a>
         <a href="/profile/">My Profile</a>
         <a id="create-post-link" href="/post/create.html" class="hidden"
@@ -23,11 +23,13 @@
       <h1>All Posts</h1>
 
       <!-- Search bar -->
-      <label for="feed-search" class="visually-hidden">Search Posts</label>
+      <label for="feed-search" class="visually-hidden"
+        >Search posts and profiles</label
+      >
       <input id="feed-search" type="search" placeholder="Search..." />
 
       <!-- Loading / errors will be shown here -->
-      <p id="feed-status" aria-live="polite"></p>
+      <p id="feed-status" role="status" aria-live="polite"></p>
 
       <!-- Posts will be rendered here -->
       <div id="feed-root"></div>
