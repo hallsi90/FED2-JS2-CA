@@ -1,5 +1,5 @@
 // src/ui/renderFullPost.ts
-// For full post layout on the single post page
+// Renders the full post on the single post page.
 
 import { formatDate } from "../utils/formatDate";
 
@@ -39,11 +39,10 @@ export interface FullPost {
  * Render full post details
  */
 export function renderFullPost(post: FullPost): string {
-  const title = post.title || "Untitled post";
+  const title = (post.title ?? "").trim() || "Untitled post";
 
   // Author name + profile link
-  const authorName = post.author?.name;
-
+  const authorName = post.author?.name?.trim();
   const authorLinkHtml = authorName
     ? `<a href="/profile/?name=${encodeURIComponent(
         authorName
@@ -53,7 +52,7 @@ export function renderFullPost(post: FullPost): string {
   // Author avatar
   const avatarUrl = post.author?.avatar?.url;
   const avatarAlt =
-    post.author?.avatar?.alt || authorName || "Author profile picture";
+    post.author?.avatar?.alt?.trim() || authorName || "Author profile picture";
 
   const avatarHtml = avatarUrl
     ? `<img src="${avatarUrl}" 
@@ -82,7 +81,7 @@ export function renderFullPost(post: FullPost): string {
   // Main image
   const imageHtml = post.media?.url
     ? `<img src="${post.media.url}" 
-       alt="${post.media.alt || title}" 
+       alt="${post.media.alt?.trim() || title}" 
        class="post-main-image" 
        loading="lazy"/>`
     : "";
@@ -151,16 +150,20 @@ function renderComments(comments: FullPost["comments"]): string {
         ? `<span class="post-comment-date">${commentDate}</span>`
         : "";
 
-      // Trim comment text and handle missing/empty values safely
+      const author = comment.owner?.trim() || "Unknown user";
       const commentBody = comment.body?.trim() || "";
+
+      const bodyHtml = commentBody
+        ? `<div>${commentBody}</div>`
+        : `<div class="post-comment-empty">(No text)</div>`;
 
       return `
         <article class="post-comment">
           <div class="post-comment-header">
-            <span class="post-comment-author">${comment.owner}</span>
+            <span class="post-comment-author">${author}</span>
             ${dateHtml}
           </div>
-          <div>${commentBody}</div>
+          ${bodyHtml}
         </article>
       `;
     })

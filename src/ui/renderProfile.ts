@@ -1,6 +1,5 @@
 // src/ui/renderProfile.ts
-// For showing a profile header (avatar, name, follow button)
-// turn a profile object into HTML for the profile page
+// Renders the profile header (avatar, name, bio, follower counts),
 
 export interface Profile {
   name: string;
@@ -22,33 +21,44 @@ export interface Profile {
 }
 
 /**
- * Render top part of the profile (avatar, name, counts)
+ * Render top part of the profile: avatar, name, bio, counts.
  */
 export function renderProfileHeader(profile: Profile): string {
-  const avatarHtml = profile.avatar?.url
-    ? `<img src="${profile.avatar.url}" 
-       alt="${profile.avatar.alt || profile.name}"
+  const name = profile.name?.trim() || "Unknown user";
+  const bio = profile.bio?.trim() || "";
+  const avatarUrl = profile.avatar?.url;
+  const avatarAlt = profile.avatar?.alt?.trim() || name;
+
+  // Avatar (image or placeholder)
+  const avatarHtml = avatarUrl
+    ? `<img src="${avatarUrl}" 
+       alt="${avatarAlt}"
        class="profile-avatar" 
        loading="lazy"/>`
-    : `<div class="profile-avatar" aria-hidden="true"></div>`;
+    : `<div class="profile-avatar profile-avatar-placeholder" aria-hidden="true"></div>`;
 
   return `
   <header class="profile-header"> 
    ${avatarHtml}
+
    <div class="profile-header-main">
-    <h1>${profile.name}</h1>
-     ${profile.bio ? `<p class="profile-bio">${profile.bio}</p>` : ""}
+    <h1 class="profile-name">${name}</h1>
+
+     ${bio ? `<p class="profile-bio">${bio}</p>` : ""}
+
      <ul class="profile-counts">
        <li>Posts: ${profile._count?.posts ?? 0}</li>
+
        <li>
          <button type="button" class="profile-count-btn"     data-list="followers">
-         Followers: ${profile._count?.followers ?? 0}
-        </button>
+           Followers: ${profile._count?.followers ?? 0}
+         </button>
        </li>
-      <li>
+
+       <li>
          <button type="button" class="profile-count-btn" data-list="following">
-         Following: ${profile._count?.following ?? 0}
-        </button>
+           Following: ${profile._count?.following ?? 0}
+         </button>
        </li>
      </ul>
    </div>

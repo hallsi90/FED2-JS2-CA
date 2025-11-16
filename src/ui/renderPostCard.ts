@@ -1,7 +1,10 @@
 // src/ui/renderPostCard.ts
-// For small post preview (used in feed, profile)
+// Renders a small post preview card (used in feed and profile pages).
 
-// small UI helper to turn a post object into HTML
+/**
+ * Shape of a post object used by the UI.
+ * This matches what we use on the feed and profile pages.
+ */
 export interface Post {
   id: number;
   title: string;
@@ -17,20 +20,21 @@ export interface Post {
 }
 
 /**
- * Create HTML for a single post in the feed.
- * We return a string so the feed page can join many of these.
+ * Create HTML for a single post card.
+ * Returns a string so the caller can map/join a list of posts into markup.
  */
 export function renderPostCard(post: Post): string {
-  const title = post.title || "Untitled post";
+  const title = post.title?.trim() || "Untitled post";
+  const body = post.body?.trim() || "";
 
-  const authorName = post.author?.name;
+  const authorName = post.author?.name?.trim();
   const authorHtml = authorName
     ? `<a href="/profile/?name=${encodeURIComponent(
         authorName
       )}">${authorName}</a>`
     : "Unknown author";
 
-  // only show an image if media.url exists
+  // Only show an image if media.url exists
   const imageHtml = post.media?.url
     ? `<img src="${post.media.url}" 
        alt="${post.media.alt || title}" 
@@ -39,9 +43,12 @@ export function renderPostCard(post: Post): string {
       />`
     : "";
 
-  const bodyPreview = post.body
-    ? `${post.body.substring(0, 120)}${post.body.length > 120 ? "..." : ""}`
-    : "";
+  // Short preview of the body text
+  const maxLength = 120;
+  const bodyPreview =
+    body.length > 0
+      ? `${body.substring(0, maxLength)}${body.length > maxLength ? "..." : ""}`
+      : "";
 
   return `
     <article class="post-card" data-post-id="${post.id}">

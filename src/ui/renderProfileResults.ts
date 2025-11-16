@@ -1,5 +1,5 @@
 // src/ui/renderProfileResults.ts
-// render profile search results
+// Renders a small profile card used in followers/following lists.
 
 export interface ProfileResult {
   name: string;
@@ -11,22 +11,31 @@ export interface ProfileResult {
   bio?: string;
 }
 
+/**
+ * Renders a small profile result card.
+ * Used when displaying followers/following on the profile page.
+ */
 export function renderProfileResult(profile: ProfileResult): string {
-  const avatarHtml = profile.avatar?.url
-    ? `<img src="${profile.avatar.url}" 
-       alt="${profile.avatar.alt || profile.name}" 
+  const name = profile.name?.trim() || "Unknown user";
+  const bio = profile.bio?.trim() || "";
+  const avatarUrl = profile.avatar?.url;
+  const avatarAlt = profile.avatar?.alt?.trim() || name;
+
+  // Avatar (image or placeholder)
+  const avatarHtml = avatarUrl
+    ? `<img src="${avatarUrl}" 
+       alt="${avatarAlt}" 
        class="profile-avatar"  
        loading="lazy"/>`
-    : "";
+    : `<div class="profile-avatar profile-avatar-placeholder" aria-hidden="true"></div>`;
 
-  // link to your profile page structure e.g. /profile/?name=USERNAME
-  const profileLink = `/profile/?name=${encodeURIComponent(profile.name)}`;
+  const profileLink = `/profile/?name=${encodeURIComponent(name)}`;
 
   return `
      <article class="profile-result">
        ${avatarHtml}
-       <h2><a href="${profileLink}">${profile.name}</a></h2>
-       ${profile.bio ? `<p class="profile-bio">${profile.bio}</p>` : ""} 
+       <h2><a href="${profileLink}">${name}</a></h2>
+       ${bio ? `<p class="profile-bio">${bio}</p>` : ""} 
      </article>
     `;
 }
