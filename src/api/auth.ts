@@ -1,5 +1,5 @@
 // src/api/auth.ts
-// register and login
+// Handles register and login
 
 import { AUTH_BASE, getJsonHeaders } from "./config";
 import { saveAuth } from "./storage";
@@ -53,13 +53,14 @@ export async function registerUser(body: RegisterBody) {
 
   if (!response.ok) {
     const message =
-      data?.errors?.[0]?.message ||
+      data?.errors?.[0]?.message ??
+      data?.message ??
       "Could not register user. Please try again.";
     throw new Error(message);
   }
 
-  // registration succeeded
-  return data;
+  // Registration succeeded
+  return data.data;
 }
 
 /**
@@ -81,7 +82,9 @@ export async function loginUser(body: LoginBody) {
 
   if (!response.ok) {
     const message =
-      data?.errors?.[0]?.message || "Login failed. Please try again.";
+      data?.errors?.[0]?.message ??
+      data?.message ??
+      "Login failed. Please try again.";
     throw new Error(message);
   }
 
@@ -93,5 +96,5 @@ export async function loginUser(body: LoginBody) {
     saveAuth(accessToken, name);
   }
 
-  return data;
+  return data.data;
 }

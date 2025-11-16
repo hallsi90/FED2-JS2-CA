@@ -1,4 +1,9 @@
 // src/api/config.ts
+// Centralised API configuration:
+// - Defines the base URL for the Noroff API (auth + social endpoints)
+// - Stores the project-wide API key
+// - Provides helper functions for JSON and authenticated requests headers
+// This file is imported by all API modules to ensure consistent request setup.
 
 /**
  * Base URL for the Noroff API (version 2).
@@ -19,7 +24,7 @@ export const SOCIAL_BASE = `${API_BASE}/social`;
 export const AUTH_BASE = `${API_BASE}/auth`;
 
 /**
- *  A single app-wide API key for all requests.
+ * A single app-wide API key for all requests.
  * (Generated via POST /auth/create-api-key)
  */
 export const NOROFF_API_KEY = "0347c2af-b301-42c6-b0d8-f75e639e2382";
@@ -31,6 +36,7 @@ export const NOROFF_API_KEY = "0347c2af-b301-42c6-b0d8-f75e639e2382";
 export function getJsonHeaders(): HeadersInit {
   return {
     "Content-Type": "application/json",
+    "X-Noroff-API-Key": NOROFF_API_KEY,
   };
 }
 
@@ -45,5 +51,6 @@ export function getAuthHeaders(token: string): HeadersInit {
   return {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
+    "X-Noroff-API-Key": NOROFF_API_KEY,
   };
 }

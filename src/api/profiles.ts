@@ -1,7 +1,12 @@
 // src/api/profiles.ts
-// getProfile(), getUserPosts(), followUser(), unfollowUser()
+// Provides all API operations for profiles:
+// - Fetch a profile (with posts, followers, following)
+// - Fetch only a profile's posts
+// - Search profiles
+// - Follow / unfollow profiles
+// - Edit own profile
 
-import { SOCIAL_BASE, getAuthHeaders, NOROFF_API_KEY } from "./config";
+import { SOCIAL_BASE, getAuthHeaders } from "./config";
 import { getToken } from "./storage";
 
 /**
@@ -20,10 +25,7 @@ export async function getProfile(name: string) {
   )}?_posts=true&_followers=true&_following=true`;
 
   const response = await fetch(url, {
-    headers: {
-      ...getAuthHeaders(token),
-      "X-Noroff-API-Key": NOROFF_API_KEY,
-    },
+    headers: getAuthHeaders(token),
   });
 
   const data = await response.json();
@@ -34,12 +36,12 @@ export async function getProfile(name: string) {
     throw new Error(message);
   }
 
-  return data.data; // return profile object
+  return data.data; // Return profile object
 }
 
 /**
  * Get only posts for a profile
- * GET /social/profiles/{name}/posts
+ * GET /social/profiles/{name}/posts?_author=true
  */
 export async function getProfilePosts(name: string) {
   const token = getToken();
@@ -52,10 +54,7 @@ export async function getProfilePosts(name: string) {
   )}/posts?_author=true`;
 
   const response = await fetch(url, {
-    headers: {
-      ...getAuthHeaders(token),
-      "X-Noroff-API-Key": NOROFF_API_KEY,
-    },
+    headers: getAuthHeaders(token),
   });
 
   const data = await response.json();
@@ -66,7 +65,7 @@ export async function getProfilePosts(name: string) {
     throw new Error(message);
   }
 
-  return data.data; // return array of posts
+  return data.data; // Return array of posts
 }
 
 /**
@@ -82,10 +81,7 @@ export async function searchProfiles(query: string) {
   const url = `${SOCIAL_BASE}/profiles/search?q=${encodeURIComponent(query)}`;
 
   const response = await fetch(url, {
-    headers: {
-      ...getAuthHeaders(token),
-      "X-Noroff-API-Key": NOROFF_API_KEY,
-    },
+    headers: getAuthHeaders(token),
   });
 
   const data = await response.json();
@@ -95,7 +91,7 @@ export async function searchProfiles(query: string) {
     throw new Error(message);
   }
 
-  return data.data; // return array of profiles
+  return data.data; // Return array of profiles
 }
 
 /**
@@ -112,10 +108,7 @@ export async function followProfile(name: string) {
 
   const response = await fetch(url, {
     method: "PUT",
-    headers: {
-      ...getAuthHeaders(token),
-      "X-Noroff-API-Key": NOROFF_API_KEY,
-    },
+    headers: getAuthHeaders(token),
   });
 
   const data = await response.json();
@@ -126,7 +119,7 @@ export async function followProfile(name: string) {
     throw new Error(message);
   }
 
-  return data.data; // return updated profile object
+  return data.data; // Return updated profile object
 }
 
 /**
@@ -143,10 +136,7 @@ export async function unfollowProfile(name: string) {
 
   const response = await fetch(url, {
     method: "PUT",
-    headers: {
-      ...getAuthHeaders(token),
-      "X-Noroff-API-Key": NOROFF_API_KEY,
-    },
+    headers: getAuthHeaders(token),
   });
 
   const data = await response.json();
@@ -157,7 +147,7 @@ export async function unfollowProfile(name: string) {
     throw new Error(message);
   }
 
-  return data.data; // return updated profile object
+  return data.data; // Return updated profile
 }
 
 /**
@@ -181,10 +171,7 @@ export async function updateProfile(
 
   const response = await fetch(url, {
     method: "PUT",
-    headers: {
-      ...getAuthHeaders(token),
-      "X-Noroff-API-Key": NOROFF_API_KEY,
-    },
+    headers: getAuthHeaders(token),
     body: JSON.stringify(payload),
   });
 
@@ -196,5 +183,5 @@ export async function updateProfile(
     throw new Error(message);
   }
 
-  return data.data; // return updated profile object
+  return data.data; // Return updated profile
 }

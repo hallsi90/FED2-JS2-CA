@@ -1,8 +1,10 @@
 // src/api/posts.ts
-// functions for working with Noroff Social posts
-// getPosts(), getPostById(), createPost(), editPost(), deletePost(), searchPosts()
+// Provides all API operations for social posts:
+// - Fetching posts (all, by ID, search)
+// - Creating, editing, and deleting posts
+// Uses authenticated requests and always returns `data.data`for consistency.
 
-import { SOCIAL_BASE, getAuthHeaders, NOROFF_API_KEY } from "./config";
+import { SOCIAL_BASE, getAuthHeaders } from "./config";
 import { getToken } from "./storage";
 
 /**
@@ -28,7 +30,6 @@ export async function getAllPosts() {
   const response = await fetch(url, {
     headers: {
       ...getAuthHeaders(token),
-      "X-Noroff-API-Key": NOROFF_API_KEY,
     },
   });
 
@@ -57,7 +58,6 @@ export async function getPostById(id: number) {
   const response = await fetch(url, {
     headers: {
       ...getAuthHeaders(token),
-      "X-Noroff-API-Key": NOROFF_API_KEY,
     },
   });
 
@@ -87,7 +87,6 @@ export async function searchPosts(query: string) {
   const response = await fetch(url, {
     headers: {
       ...getAuthHeaders(token),
-      "X-Noroff-API-Key": NOROFF_API_KEY,
     },
   });
 
@@ -134,7 +133,6 @@ export async function createPost(payload: {
     method: "POST",
     headers: {
       ...getAuthHeaders(token),
-      "X-Noroff-API-Key": NOROFF_API_KEY,
     },
     body: JSON.stringify(payload),
   });
@@ -172,7 +170,6 @@ export async function updatePost(
     method: "PUT",
     headers: {
       ...getAuthHeaders(token),
-      "X-Noroff-API-Key": NOROFF_API_KEY,
     },
     body: JSON.stringify(payload),
   });
@@ -185,7 +182,7 @@ export async function updatePost(
     throw new Error(message);
   }
 
-  return data.data; // updated post
+  return data.data; // Updated post
 }
 
 /**
@@ -201,19 +198,18 @@ export async function deletePost(id: number) {
     method: "DELETE",
     headers: {
       ...getAuthHeaders(token),
-      "X-Noroff-API-Key": NOROFF_API_KEY,
     },
   });
 
   // DELETE returns 204 No Content on success
   if (!response.ok) {
-    // try to read error body if it exists
+    // Try to read error body if it exists
     let message = "Could not delete post.";
     try {
       const data = await response.json();
       message = data?.errors?.[0]?.message || message;
     } catch {
-      // ignore JSON parse errors, keep default message
+      // Ignore JSON parse errors, keep default message
     }
     throw new Error(message);
   }
