@@ -88,3 +88,16 @@ button:hover {
   color: var(--primary-color);
   border: 1px solid var(--primary-color);
 }
+
+/* Visually hidden text (used for the search label above the search bar on feed and for the H1 "My Profile" on profile page) */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

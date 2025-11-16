@@ -22,10 +22,19 @@
       <p id="profile-status" aria-live="polite"></p>
 
       <!-- profile header -->
-      <section id="profile-root"></section>
+      <section aria-labelledby="profile-heading">
+        <h2 id="profile-heading" class="visually-hidden">My Profile</h2>
+        <div id="profile-root"></div>
+      </section>
+
       <a id="edit-profile-link" href="/profile/edit.html">Edit Profile</a>
-      <h2>My posts</h2>
-      <section id="profile-posts"></section>
+
+      <h3 id="my-posts-heading">My posts</h3>
+      <div
+        id="profile-posts"
+        role="region"
+        aria-labelledby="my-posts-heading"
+      ></div>
     </main>
 
     <script type="module" src="/src/pages/profile.ts"></script>
